@@ -20,4 +20,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TrackingProject.BusinessLayer\TrackingProject.BusinessLayer.csproj" />
+    <ProjectReference Include="..\TrackingProject.DataAccessLayer\TrackingProject.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\TrackingProject.DtoLayer\TrackingProject.DtoLayer.csproj" />
+    <ProjectReference Include="..\TrackingProject.EntityLayer\TrackingProject.EntityLayer.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -19,4 +19,9 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TrackingProject.DataAccessLayer\TrackingProject.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\TrackingProject.EntityLayer\TrackingProject.EntityLayer.csproj" />
+  </ItemGroup>
+
 </Project>
