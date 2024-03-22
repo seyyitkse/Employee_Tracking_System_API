@@ -9,36 +9,36 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.BusinessLayer.Concrete
 {
-    public class AnnouncementTypeManager : IAnnouncementService
+    public class AnnouncementTypeManager : IAnnouncementTypeService
     {
-        private readonly IAnnouncementDal _announcementType;
+        IAnnouncementTypeDal _announcementType;
 
-        public AnnouncementTypeManager(IAnnouncementDal announcementType)
+        public AnnouncementTypeManager(IAnnouncementTypeDal announcementType)
         {
             _announcementType = announcementType;
         }
 
-        public void TDelete(Announcement entity)
+        public void TDelete(AnnouncementType entity)
         {
             _announcementType.Delete(entity);
         }
 
-        public Announcement TGetById(int id)
+        public AnnouncementType TGetById(int id)
         {
             return _announcementType.GetById(id);
         }
 
-        public List<Announcement> TGetList()
+        public List<AnnouncementType> TGetList()
         {
             return _announcementType.GetList();
         }
 
-        public void TInsert(Announcement entity)
+        public void TInsert(AnnouncementType entity)
         {
             _announcementType.Insert(entity);
         }
 
-        public void TUpdate(Announcement entity)
+        public void TUpdate(AnnouncementType entity)
         {
             _announcementType.Update(entity);
         }

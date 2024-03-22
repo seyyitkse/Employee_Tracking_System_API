@@ -7,7 +7,7 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.DataAccessLayer.Abstract
 {
-    public interface IAnnouncementDal:IGenericDal<Announcement>
+    public interface IAnnouncementDal : IGenericDal<Announcement>
     {
     }
 }
