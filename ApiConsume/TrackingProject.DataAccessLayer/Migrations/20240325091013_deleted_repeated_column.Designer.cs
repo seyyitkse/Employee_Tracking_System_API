@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrackingProject.DataAccessLayer.Concrete;
 
@@ -10,9 +11,10 @@ using TrackingProject.DataAccessLayer.Concrete;
 namespace TrackingProject.DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240325091013_deleted_repeated_column")]
+    partial class deleted_repeated_column
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,6 +27,9 @@ namespace TrackingProject.DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("AnnouncementTypeTypeID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Content")
                         .HasColumnType("longtext");
 
@@ -34,10 +39,9 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("TypeID")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
+
+                    b.HasIndex("AnnouncementTypeTypeID");
 
                     b.ToTable("Announcements");
                 });
@@ -99,15 +103,49 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.Property<int>("EmployeeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("SchuduleTypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("TypeID")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
+                    b.HasIndex("SchuduleTypeID");
+
                     b.ToTable("ScheduleUsers");
+                });
+
+            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.Announcement", b =>
+                {
+                    b.HasOne("TrackingProject.EntityLayer.Concrete.AnnouncementType", "AnnouncementType")
+                        .WithMany("Announcements")
+                        .HasForeignKey("AnnouncementTypeTypeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AnnouncementType");
+                });
+
+            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.ScheduleUser", b =>
+                {
+                    b.HasOne("TrackingProject.EntityLayer.Concrete.ScheduleType", "SchuduleType")
+                        .WithMany("ScheduleUsers")
+                        .HasForeignKey("SchuduleTypeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SchuduleType");
+                });
+
+            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.AnnouncementType", b =>
+                {
+                    b.Navigation("Announcements");
+                });
+
+            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.ScheduleType", b =>
+                {
+                    b.Navigation("ScheduleUsers");
                 });
 #pragma warning restore 612, 618
         }

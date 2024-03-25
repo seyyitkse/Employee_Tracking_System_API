@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrackingProject.BusinessLayer.Abstract;
 using TrackingProject.EntityLayer.Concrete;
@@ -16,10 +17,10 @@ namespace TrackingProject.WebApi.Controllers
             _announcementService = announcementService;
         }
         [HttpGet]
-        public IActionResult AnnouncementList(Announcement announcement)
+        public IActionResult AnnouncementList()
         {
-            _announcementService.TInsert(announcement);
-            return Ok();
+            var values=_announcementService.TGetList();
+            return Ok(values);
         }
         [HttpPost]
         public IActionResult AddAnnouncement(Announcement Announcement)
