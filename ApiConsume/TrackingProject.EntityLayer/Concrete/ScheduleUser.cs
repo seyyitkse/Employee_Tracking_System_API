@@ -15,7 +15,7 @@ namespace TrackingProject.EntityLayer.Concrete
         public int Status { get; set; }
         public DateTime DateTime { get; set; }
         public string? Description { get; set; }
-        public int ScheduleType { get; set; }
-        public ScheduleType SchuduleType { get; set; }
+        public int TypeID { get; set; }
+
     }
 }

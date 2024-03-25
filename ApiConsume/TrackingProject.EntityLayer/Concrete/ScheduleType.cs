@@ -12,6 +12,5 @@ namespace TrackingProject.EntityLayer.Concrete
         [Key]
         public int ID { get; set; }
         public string? Name { get; set; }
-        public ICollection<ScheduleUser> ScheduleUsers { get; set; }
     }
 }
