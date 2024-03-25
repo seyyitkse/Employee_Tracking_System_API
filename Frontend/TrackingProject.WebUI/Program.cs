@@ -1,4 +1,9 @@
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpClient();
+builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Program>());
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -18,6 +23,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=AdminLayout}/{action=_AdminLayout}/{id?}");
 
 app.Run();
