@@ -22,15 +22,16 @@
                 <th scope="row">@item.ID</th>
                 <td>@item.Title</td>
                 <td>@item.TypeID</td>
-                <td>@item.Date</td>
+                <td>@item.Date.ToShortDateString()</td>
                 <td>
-                    <a href="#" class="btn btn-primary">Detay</a>
-                </td>
+                        <a asp-action="AnnouncementDetails" asp-controller="Announcement" asp-route-id="@item.ID" class="btn btn-primary">Detay</a>
+                 </td>
             </tr>  
             }
              
        </tbody>
     </table>
+    <br>
     <div class="mt-4">
         <a class="btn btn-success" href="/Announcement/AddAnnouncement/">Yeni Duyuru Oluştur</a>
     </div>
