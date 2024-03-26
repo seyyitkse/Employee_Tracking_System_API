@@ -6,7 +6,7 @@
 <!doctype html>
 <html lang="en">
 
-@await Html.PartialAsync("/Views/AdminLayout/PartialHead.cshtml")
+@await Html.PartialAsync("/Areas/Admin/Views/AdminLayout/PartialHead.cshtml")
 
 <body>
     <!--  Body Wrapper -->
@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <!-- Sidebar navigation-->
-                @await Html.PartialAsync("/Views/AdminLayout/PartialSidebar.cshtml")
+                @await Html.PartialAsync("/Areas/Admin/Views/AdminLayout/PartialSidebar.cshtml")
                 <!-- End Sidebar navigation -->
             </div>
             <!-- End Sidebar scroll-->
@@ -34,14 +34,14 @@
         <!--  Main wrapper -->
         <div class="body-wrapper">
             <!--  Header Start -->
-            @await Html.PartialAsync("/Views/AdminLayout/PartialHeader.cshtml")
+            @await Html.PartialAsync("/Areas/Admin/Views/AdminLayout/PartialHeader.cshtml")
             <!--  Header End -->
             <div class="container-fluid">
             @RenderBody()
             </div>
         </div>
     </div>
-    @await Html.PartialAsync("/Views/AdminLayout/PartialScript.cshtml")
+    @await Html.PartialAsync("/Areas/Admin/Views/AdminLayout/PartialScript.cshtml")
 
 </body>
 

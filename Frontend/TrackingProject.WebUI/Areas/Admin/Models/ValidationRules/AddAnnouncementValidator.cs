@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using TrackingProject.WebUI.Models.ViewModels.Announcement;
+using TrackingProject.WebUI.Areas.Admin.Models.ViewModels.Announcement;
 
-namespace TrackingProject.WebUI.Models.ValidationRules
+namespace TrackingProject.WebUI.Areas.Admin.Models.ValidationRules
 {
-    public class AddAnnouncementValidator:AbstractValidator<AddAnnouncementViewModel>
+    public class AddAnnouncementValidator : AbstractValidator<AddAnnouncementViewModel>
     {
-        public AddAnnouncementValidator() 
+        public AddAnnouncementValidator()
         {
             RuleFor(x => x.Content)
                 .NotEmpty().WithMessage("İçerik boş olamaz.")

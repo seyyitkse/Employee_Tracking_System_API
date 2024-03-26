@@ -25,4 +25,12 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=AdminLayout}/{action=_AdminLayout}/{id?}");
 
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+      name: "areas",
+      pattern: "{area:exists}/{controller=Announcement}/{action=Index}/{id?}"
+    );
+});
+
 app.Run();

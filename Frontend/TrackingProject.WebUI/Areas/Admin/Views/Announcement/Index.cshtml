@@ -1,7 +1,7 @@
 ﻿@model List<AnnouncementViewModel>
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/AdminLayout/AdminLayout.cshtml";
+    Layout = "~/Areas/Admin/Views/AdminLayout/AdminLayout.cshtml";
 }
 <div class="container-fluid mt-4">
     <h3>Duyurular</h3>
@@ -24,7 +24,7 @@
                 <td>@item.TypeID</td>
                 <td>@item.Date.ToShortDateString()</td>
                 <td>
-                        <a asp-action="AnnouncementDetails" asp-controller="Announcement" asp-route-id="@item.ID" class="btn btn-primary">Detay</a>
+                        <a asp-action="AnnouncementDetails" asp-controller="Announcement" asp-area="Admin" asp-route-id="@item.ID" class="btn btn-primary">Detay</a>
                  </td>
             </tr>  
             }
@@ -33,7 +33,7 @@
     </table>
     <br>
     <div class="mt-4">
-        <a class="btn btn-success" href="/Announcement/AddAnnouncement/">Yeni Duyuru Oluştur</a>
+        <a class="btn btn-success" href="/Admin/Announcement/AddAnnouncement/">Yeni Duyuru Oluştur</a>
     </div>
 </div>
 

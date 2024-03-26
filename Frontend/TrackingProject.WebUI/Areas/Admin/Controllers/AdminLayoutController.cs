@@ -2,6 +2,7 @@
 
 namespace TrackingProject.WebUI.Controllers.AdminLayout
 {
+    [Area("Admin")]
     public class AdminLayoutController : Controller
     {
         public IActionResult AdminLayout()

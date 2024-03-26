@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System.Text;
-using TrackingProject.WebUI.Models.ValidationRules;
-using TrackingProject.WebUI.Models.ViewModels.Announcement;
+using TrackingProject.WebUI.Areas.Admin.Models.ValidationRules;
+using TrackingProject.WebUI.Areas.Admin.Models.ViewModels.Announcement;
 
 namespace TrackingProject.WebUI.Controllers.Announcement
 {
+    [Area("Admin")]
+    [Route("Admin/[controller]/[action]")]
     public class AnnouncementController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -37,7 +39,7 @@ namespace TrackingProject.WebUI.Controllers.Announcement
         [HttpPost]
         public async Task<IActionResult> AddAnnouncement(AddAnnouncementViewModel newAnnouncement)
         {
-            AddAnnouncementValidator validations = new AddAnnouncementValidator();
+            AddAnnouncementValidator validations = new();
             ValidationResult results=validations.Validate(newAnnouncement);
             if (results.IsValid)
             {
@@ -47,7 +49,7 @@ namespace TrackingProject.WebUI.Controllers.Announcement
                 var responseMessage = await client.PostAsync("http://localhost:5144/api/Announcement", jsonAnnouncement);
                 if (responseMessage.IsSuccessStatusCode)
                 {
-                    return Ok(responseMessage);
+                    return RedirectToAction("Index", "Announcement");
                 }
             }
             else

@@ -1,6 +1,4 @@
-﻿using TrackingProject.WebUI.Models.ViewModels.Announcement;
-
-namespace TrackingProject.WebUI.Models.ViewModels.Announcement
+﻿namespace TrackingProject.WebUI.Areas.Admin.Models.ViewModels.Announcement
 {
     public class AddAnnouncementViewModel
     {
