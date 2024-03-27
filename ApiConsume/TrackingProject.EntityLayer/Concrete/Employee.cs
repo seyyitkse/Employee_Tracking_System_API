@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TrackingProject.EntityLayer.Concrete
 {
-    public class Employee:IdentityUser
+    public class Employee:IdentityUser<string>
     {
         public int DepartmentID { get; set; }
     }
