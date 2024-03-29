@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,9 +10,9 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.DataAccessLayer.Concrete
 {
-    public class EmployeeDbContext:IdentityDbContext<Employee,IdentityRole,string>
+    public class PanelUserDbContext : IdentityDbContext<PanelUser, PanelUserRoles, int>
     {
-        public EmployeeDbContext(DbContextOptions<EmployeeDbContext> options)
+        public PanelUserDbContext(DbContextOptions<PanelUserDbContext> options)
         : base(options)
         {
         }
