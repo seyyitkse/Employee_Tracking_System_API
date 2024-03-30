@@ -10,11 +10,19 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.DataAccessLayer.Concrete
 {
-    public class PanelUserDbContext : IdentityDbContext<PanelUser, PanelUserRoles, int>
+    public class PanelUserContext : IdentityDbContext<PanelUser, PanelUserRoles, int>
     {
-        public PanelUserDbContext(DbContextOptions<PanelUserDbContext> options)
+        public PanelUserContext(DbContextOptions<PanelUserContext> options)
         : base(options)
         {
+        }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<IdentityUser>(b =>
+            {
+                b.HasKey(u=>u.Id);
+            });
         }
     }
 }

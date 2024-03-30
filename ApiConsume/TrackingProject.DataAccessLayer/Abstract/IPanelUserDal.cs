@@ -7,7 +7,7 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.DataAccessLayer.Abstract
 {
-    public interface IAdminDal:IGenericDal<Admin>
+    public interface IPanelUserDal:IGenericDal<PanelUser>
     {
     }
 }

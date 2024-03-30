@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TrackingProject.EntityLayer.Concrete
 {
-    public class Admin:IdentityUser<string>
+    public class PanelUserRoles:IdentityRole<int>
     {
     }
 }
