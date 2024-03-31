@@ -7,6 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dtos\AnnouncementTypeDto\**" />
+    <Compile Remove="Dtos\DepartmentDto\**" />
+    <Compile Remove="Dtos\PanelUserDto\**" />
+    <Compile Remove="Dtos\PanelUserRolesDto\**" />
+    <Compile Remove="Dtos\ScheduleTypeDto\**" />
+    <Compile Remove="Dtos\ScheduleUserDto\**" />
+    <EmbeddedResource Remove="Dtos\AnnouncementTypeDto\**" />
+    <EmbeddedResource Remove="Dtos\DepartmentDto\**" />
+    <EmbeddedResource Remove="Dtos\PanelUserDto\**" />
+    <EmbeddedResource Remove="Dtos\PanelUserRolesDto\**" />
+    <EmbeddedResource Remove="Dtos\ScheduleTypeDto\**" />
+    <EmbeddedResource Remove="Dtos\ScheduleUserDto\**" />
+    <None Remove="Dtos\AnnouncementTypeDto\**" />
+    <None Remove="Dtos\DepartmentDto\**" />
+    <None Remove="Dtos\PanelUserDto\**" />
+    <None Remove="Dtos\PanelUserRolesDto\**" />
+    <None Remove="Dtos\ScheduleTypeDto\**" />
+    <None Remove="Dtos\ScheduleUserDto\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.28" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.28">
       <PrivateAssets>all</PrivateAssets>
