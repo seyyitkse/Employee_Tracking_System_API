@@ -6,6 +6,7 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.WebApi.Controllers
 {
+    [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class AnnouncementController : ControllerBase

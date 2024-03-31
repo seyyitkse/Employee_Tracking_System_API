@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.28" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.28" />
@@ -30,6 +31,10 @@
     <ProjectReference Include="..\TrackingProject.DataAccessLayer\TrackingProject.DataAccessLayer.csproj" />
     <ProjectReference Include="..\TrackingProject.DtoLayer\TrackingProject.DtoLayer.csproj" />
     <ProjectReference Include="..\TrackingProject.EntityLayer\TrackingProject.EntityLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

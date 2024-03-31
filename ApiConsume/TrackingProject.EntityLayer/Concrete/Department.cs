@@ -12,6 +12,5 @@ namespace TrackingProject.EntityLayer.Concrete
         [Key]
         public int DepartmentID { get; set; }
         public int Name { get; set; }
-        //public ICollection<PanelUser> Employees { get; set; }
     }
 }

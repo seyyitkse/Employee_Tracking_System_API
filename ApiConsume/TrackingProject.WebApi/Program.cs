@@ -1,36 +1,28 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using System.Configuration;
 using TrackingProject.BusinessLayer.Abstract;
 using TrackingProject.BusinessLayer.Concrete;
 using TrackingProject.DataAccessLayer.Abstract;
 using TrackingProject.DataAccessLayer.Concrete;
 using TrackingProject.DataAccessLayer.EntityFramework;
+using TrackingProject.EntityLayer.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
-// Add services to the container.
 
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// Set up database connections
 builder.Services.AddDbContext<Context>(options =>
 {
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")));
 });
 
-var connectionStringEmployee = builder.Configuration.GetConnectionString("EmployeeConnection");
-builder.Services.AddDbContext<EmployeeDbContext>(options =>
+
+builder.Services.AddDbContext<PanelUserContext>(options =>
 {
-    options.UseMySql(connectionStringEmployee, ServerVersion.AutoDetect(connectionStringEmployee));
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")));
 });
 
-var connectionStringAdmin = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AdminDbContext>(options =>
-{
-    options.UseMySql(connectionStringAdmin, ServerVersion.AutoDetect(connectionStringAdmin));
-});
-
+// Add scoped services
 builder.Services.AddScoped<IAnnouncementDal, EfAnnouncementDal>();
 builder.Services.AddScoped<IAnnouncementService, AnnouncementManager>();
 builder.Services.AddScoped<IAnnouncementTypeDal, EfAnnouncementTypeDal>();
@@ -45,12 +37,13 @@ builder.Services.AddScoped<IScheduleTypeService, ScheduleTypeManager>();
 builder.Services.AddScoped<IScheduleUserDal, EfScheduleUserDal>();
 builder.Services.AddScoped<IScheduleUserService, ScheduleUserManager>();
 
-builder.Services.AddScoped<IAdminDal, EfAdminDal>();
-builder.Services.AddScoped<IAdminService, AdminManager>();
+builder.Services.AddScoped<IPanelUserDal, EfPanelUserDal>();
+builder.Services.AddScoped<IPanelUserService, PanelUserManager>();
 
-builder.Services.AddScoped<IEmployeeDal, EfEmployeeDal>();
-builder.Services.AddScoped<IEmployeeService, EmployeeManager>();
 
+builder.Services.AddAutoMapper(typeof(Program));
+
+// Configure CORS
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("TrackingApiCors", opts =>
@@ -58,21 +51,29 @@ builder.Services.AddCors(opt =>
         opts.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
+
+// Add FluentValidation for validation
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
+
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Add Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<PanelUserContext>(); 
+builder.Services.AddIdentity<PanelUser, PanelUserRoles>().AddEntityFrameworkStores<PanelUserContext>();
 
+
+builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseCors("TrackingApiCors");
 
 app.UseAuthorization();
