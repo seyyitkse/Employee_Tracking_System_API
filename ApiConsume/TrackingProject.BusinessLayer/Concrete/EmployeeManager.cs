@@ -1,46 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 using TrackingProject.BusinessLayer.Abstract;
-using TrackingProject.DataAccessLayer.Abstract;
-using TrackingProject.EntityLayer.Concrete;
+using TrackingProject.DtoLayer.Dtos.EmployeeDto;
 
 namespace TrackingProject.BusinessLayer.Concrete
 {
     public class EmployeeManager : IEmployeeService
     {
-        IEmployeeDal _employeeDal;
+        private UserManager<IdentityUser> _userManager;
 
-        public EmployeeManager(IEmployeeDal employeeDal)
+        public EmployeeManager(UserManager<IdentityUser> userManager)
         {
-            _employeeDal = employeeDal;
+            _userManager = userManager;
         }
 
-        public void TDelete(Employee entity)
+        public async Task<EmployeeManagerResponse> RegisterUserAsync(CreateEmployeeDto model)
         {
-            _employeeDal.Delete(entity);
-        }
+            if (model == null)
+                throw new NullReferenceException("Register model is null");
 
-        public Employee TGetById(int id)
-        {
-            return _employeeDal.GetById(id);
-        }
+            if (model.Password != model.ConfirmPassword)
+            {
+                EmployeeManagerResponse employeeManagerResponse1 = new EmployeeManagerResponse
+                {
+                    Message = "Confirm password doesn't match the password",
+                    IsSuccess = false,
+                };
+            }
 
-        public List<Employee> TGetList()
-        {
-            return _employeeDal.GetList();
-        }
+            var identityuser = new IdentityUser()
+            {
+                Email = model.Email,
+                UserName = model.Email,
+            };
 
-        public void TInsert(Employee entity)
-        {
-            _employeeDal.Insert(entity);
-        }
-
-        public void TUpdate(Employee entity)
-        {
-            _employeeDal.Update(entity);
+            var result = await _userManager.CreateAsync(identityuser, model.Password);
+            if (result.Succeeded)
+            {
+                return new EmployeeManagerResponse
+                {
+                    Message = "Employee created successfully!",
+                    IsSuccess = false,
+                    Errors = result.Errors.Select(e => e.Description)
+                };
+            }
+            return new EmployeeManagerResponse
+            {
+                Message = "Employee did not create",
+                IsSuccess = false,
+                Errors = result.Errors.Select(e => e.Description)
+            };
         }
     }
 }

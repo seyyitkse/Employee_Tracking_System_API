@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TrackingProject.DataAccessLayer\TrackingProject.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\TrackingProject.DtoLayer\TrackingProject.DtoLayer.csproj" />
     <ProjectReference Include="..\TrackingProject.EntityLayer\TrackingProject.EntityLayer.csproj" />
   </ItemGroup>
 

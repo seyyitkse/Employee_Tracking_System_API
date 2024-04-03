@@ -7,7 +7,7 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.DataAccessLayer.Abstract
 {
-    public interface IEmployeeDal:IGenericDal<Employee>
+    public interface IEmployeeDal:IGenericDal<EmployeeUser>
     {
     }
 }
