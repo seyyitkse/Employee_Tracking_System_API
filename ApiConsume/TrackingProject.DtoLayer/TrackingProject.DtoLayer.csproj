@@ -23,4 +23,16 @@
     <ProjectReference Include="..\TrackingProject.EntityLayer\TrackingProject.EntityLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\AnnouncementTypeDto\" />
+    <Folder Include="Dtos\DepartmentDto\" />
+    <Folder Include="Dtos\ScheduleUserDto\" />
+    <Folder Include="Dtos\ScheduleTypeDto\" />
+    <Folder Include="Dtos\PanelUserRolesDto\" />
+    <Folder Include="Dtos\PanelUserDto\" />
+=======
+    <Folder Include="Dtos\" />
+>>>>>>> Stashed changes
+  </ItemGroup>
+
 </Project>
