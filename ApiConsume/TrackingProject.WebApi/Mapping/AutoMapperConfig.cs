@@ -4,12 +4,18 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.WebApi.Mapping
 {
-    public class AutoMapperConfig:Profile
+    public class AutoMapperConfig : Profile
     {
-        public AutoMapperConfig() 
+        public AutoMapperConfig()
         {
-            CreateMap<CreateAnnouncementDto,Announcement>().ReverseMap();
-            CreateMap<UpdateAnnouncementDto,Announcement>().ReverseMap();
+            CreateMap<ResultAnnouncementDto, Announcement>().ReverseMap();
+            CreateMap<CreateAnnouncementDto, Announcement>().ReverseMap();
+            CreateMap<UpdateAnnouncementDto, Announcement>().ReverseMap();
+            
+            //CreateMap<RegisterPanelUserDto, PanelUser>().ReverseMap();
+            //CreateMap<ResultPanelUserDto, PanelUser>().ReverseMap();
+            //CreateMap<UpdatePanelUserDto, PanelUser>().ReverseMap();
+
         }
     }
 }

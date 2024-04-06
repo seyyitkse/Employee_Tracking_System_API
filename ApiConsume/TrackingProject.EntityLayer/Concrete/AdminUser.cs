@@ -9,7 +9,7 @@ namespace TrackingProject.EntityLayer.Concrete
 {
     public class AdminUser
     {
-        [Key] 
+        [Key]
         public int AdminID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

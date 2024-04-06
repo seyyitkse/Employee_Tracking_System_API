@@ -1,28 +1,55 @@
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.IdentityModel.Tokens;
+using System.Configuration;
+using System.Text;
 using TrackingProject.BusinessLayer.Abstract;
 using TrackingProject.BusinessLayer.Concrete;
 using TrackingProject.DataAccessLayer.Abstract;
 using TrackingProject.DataAccessLayer.Concrete;
 using TrackingProject.DataAccessLayer.EntityFramework;
-using TrackingProject.EntityLayer.Concrete;
+
 
 var builder = WebApplication.CreateBuilder(args);
+// Add services to the container.
 
-// Set up database connections
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<Context>(options =>
 {
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
-
-builder.Services.AddDbContext<PanelUserContext>(options =>
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 5;
+}).AddEntityFrameworkStores<Context>().AddDefaultTokenProviders();
+
+
+builder.Services.AddAuthentication(auth =>
+{
+    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = "ahmetseyyit",
+        ValidIssuer = "ahmetseyyit",
+        RequireExpirationTime = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("This is the key use in encryption")),
+    };
 });
 
-// Add scoped services
+
 builder.Services.AddScoped<IAnnouncementDal, EfAnnouncementDal>();
 builder.Services.AddScoped<IAnnouncementService, AnnouncementManager>();
 builder.Services.AddScoped<IAnnouncementTypeDal, EfAnnouncementTypeDal>();
@@ -37,13 +64,13 @@ builder.Services.AddScoped<IScheduleTypeService, ScheduleTypeManager>();
 builder.Services.AddScoped<IScheduleUserDal, EfScheduleUserDal>();
 builder.Services.AddScoped<IScheduleUserService, ScheduleUserManager>();
 
-builder.Services.AddScoped<IPanelUserDal, EfPanelUserDal>();
-builder.Services.AddScoped<IPanelUserService, PanelUserManager>();
+builder.Services.AddScoped<IEmployeeDal, EfEmployeeDal>();
+builder.Services.AddScoped<IEmployeeService, EmployeeManager>();
 
 
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<IEmployeeDal, EfEmployeeDal>();
+builder.Services.AddScoped<IEmployeeService, EmployeeManager>();
 
-// Configure CORS
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("TrackingApiCors", opts =>
@@ -51,31 +78,25 @@ builder.Services.AddCors(opt =>
         opts.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
-
-// Add FluentValidation for validation
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
-
 builder.Services.AddControllers();
-
-// Add Swagger/OpenAPI
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<PanelUserContext>(); 
-builder.Services.AddIdentity<PanelUser, PanelUserRoles>().AddEntityFrameworkStores<PanelUserContext>();
-
 
 builder.Services.AddControllersWithViews();
+
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseCors("TrackingApiCors");
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

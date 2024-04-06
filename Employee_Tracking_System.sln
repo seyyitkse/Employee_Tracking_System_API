@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackingProject.BusinessLay
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackingProject.DtoLayer", "ApiConsume\TrackingProject.DtoLayer\TrackingProject.DtoLayer.csproj", "{0173F92A-BF61-43AD-A6BC-34D9C435A12F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackingProject.WebUI", "Frontend\TrackingProject.WebUI\TrackingProject.WebUI.csproj", "{F33D330A-4D47-4CE6-A7C8-86ADE95CBD9D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,10 +45,6 @@ Global
 		{0173F92A-BF61-43AD-A6BC-34D9C435A12F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0173F92A-BF61-43AD-A6BC-34D9C435A12F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0173F92A-BF61-43AD-A6BC-34D9C435A12F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F33D330A-4D47-4CE6-A7C8-86ADE95CBD9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F33D330A-4D47-4CE6-A7C8-86ADE95CBD9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F33D330A-4D47-4CE6-A7C8-86ADE95CBD9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F33D330A-4D47-4CE6-A7C8-86ADE95CBD9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

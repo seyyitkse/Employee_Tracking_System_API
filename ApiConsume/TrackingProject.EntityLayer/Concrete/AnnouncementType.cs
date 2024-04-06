@@ -13,5 +13,6 @@ namespace TrackingProject.EntityLayer.Concrete
         [Key]
         public int TypeID { get; set; }
         public string? Name { get; set; }
+        public ICollection<Announcement> announcements { get; set; }
     }
 }
