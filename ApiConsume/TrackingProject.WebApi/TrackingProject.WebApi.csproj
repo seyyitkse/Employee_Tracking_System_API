@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -35,9 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\TrackingProject.DtoLayer\TrackingProject.DtoLayer.csproj" />
     <ProjectReference Include="..\TrackingProject.BusinessLayer\TrackingProject.BusinessLayer.csproj" />
     <ProjectReference Include="..\TrackingProject.DataAccessLayer\TrackingProject.DataAccessLayer.csproj" />
-    <ProjectReference Include="..\TrackingProject.DtoLayer\TrackingProject.DtoLayer.csproj" />
     <ProjectReference Include="..\TrackingProject.EntityLayer\TrackingProject.EntityLayer.csproj" />
   </ItemGroup>
 

@@ -11,8 +11,8 @@ using TrackingProject.DataAccessLayer.Concrete;
 namespace TrackingProject.DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240402181714_add_identity_tables")]
-    partial class add_identity_tables
+    [Migration("20240406092410_add_newdatabase_with_codefirst")]
+    partial class add_newdatabase_with_codefirst
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackingProject.DataAccessL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackingProject.BusinessLayer", "ApiConsume\TrackingProject.BusinessLayer\TrackingProject.BusinessLayer.csproj", "{79233436-59AA-4FBC-93D8-0D8FF81CACD8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackingProject.DtoLayer", "ApiConsume\TrackingProject.DtoLayer\TrackingProject.DtoLayer.csproj", "{0173F92A-BF61-43AD-A6BC-34D9C435A12F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackingProject.DtoLayer", "TrackingProject.DtoLayer\TrackingProject.DtoLayer.csproj", "{168DCF71-B500-40CE-9789-CE1FB182D3C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{79233436-59AA-4FBC-93D8-0D8FF81CACD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79233436-59AA-4FBC-93D8-0D8FF81CACD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79233436-59AA-4FBC-93D8-0D8FF81CACD8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0173F92A-BF61-43AD-A6BC-34D9C435A12F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0173F92A-BF61-43AD-A6BC-34D9C435A12F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0173F92A-BF61-43AD-A6BC-34D9C435A12F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0173F92A-BF61-43AD-A6BC-34D9C435A12F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{168DCF71-B500-40CE-9789-CE1FB182D3C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{168DCF71-B500-40CE-9789-CE1FB182D3C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{168DCF71-B500-40CE-9789-CE1FB182D3C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{168DCF71-B500-40CE-9789-CE1FB182D3C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,7 +54,7 @@ Global
 		{969E4B05-2EEE-43EC-A4D0-49C21713F36E} = {0E862F03-6842-4F51-9007-3ECA898AC734}
 		{FC1A05CA-A05C-497F-9C6D-FA6B3B1EE317} = {0E862F03-6842-4F51-9007-3ECA898AC734}
 		{79233436-59AA-4FBC-93D8-0D8FF81CACD8} = {0E862F03-6842-4F51-9007-3ECA898AC734}
-		{0173F92A-BF61-43AD-A6BC-34D9C435A12F} = {0E862F03-6842-4F51-9007-3ECA898AC734}
+		{168DCF71-B500-40CE-9789-CE1FB182D3C7} = {0E862F03-6842-4F51-9007-3ECA898AC734}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA7E9C2C-C770-44CA-8656-ACA42D0CE5EE}

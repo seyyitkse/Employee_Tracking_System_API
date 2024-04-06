@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using TrackingProject.DtoLayer.Dtos.AnnouncementDto;
 using TrackingProject.EntityLayer.Concrete;
+using TrackingProject.WebApi.Dtos.AnnouncementDto;
 
 namespace TrackingProject.WebApi.Mapping
 {
@@ -8,9 +9,9 @@ namespace TrackingProject.WebApi.Mapping
     {
         public AutoMapperConfig()
         {
-            CreateMap<ResultAnnouncementDto, Announcement>().ReverseMap();
-            CreateMap<CreateAnnouncementDto, Announcement>().ReverseMap();
-            CreateMap<UpdateAnnouncementDto, Announcement>().ReverseMap();
+            CreateMap<ResultsAnnouncementDto, Announcement>().ReverseMap();
+            CreateMap<CreatedAnnouncementDto, Announcement>().ReverseMap();
+            CreateMap<UpdatedAnnouncementDto, Announcement>().ReverseMap();
             
             //CreateMap<RegisterPanelUserDto, PanelUser>().ReverseMap();
             //CreateMap<ResultPanelUserDto, PanelUser>().ReverseMap();

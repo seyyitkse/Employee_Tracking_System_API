@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TrackingProject.EntityLayer.Concrete
+namespace TrackingProject.DtoLayer.Dtos.AnnouncementDto
 {
-    public class Announcement
+    public class ResultsAnnouncementDto
     {
-        [Key]
         public int ID { get; set; }
         public string? Title { get; set; }
         public string? Content { get; set; }
