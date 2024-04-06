@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -30,6 +30,9 @@
     <Folder Include="Dtos\ScheduleTypeDto\" />
     <Folder Include="Dtos\PanelUserRolesDto\" />
     <Folder Include="Dtos\PanelUserDto\" />
+=======
+    <Folder Include="Dtos\" />
+>>>>>>> Stashed changes
   </ItemGroup>
 
 </Project>
