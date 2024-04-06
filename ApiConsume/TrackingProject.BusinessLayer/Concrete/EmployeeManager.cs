@@ -7,10 +7,40 @@ namespace TrackingProject.BusinessLayer.Concrete
     public class EmployeeManager : IEmployeeService
     {
         private UserManager<IdentityUser> _userManager;
+<<<<<<< Updated upstream
 
         public EmployeeManager(UserManager<IdentityUser> userManager)
         {
             _userManager = userManager;
+=======
+        private SignInManager<IdentityUser> _signInManager;
+
+        public EmployeeManager(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
+
+        public async Task<EmployeeManagerResponse> LoginUserAsync(LoginEmployeeDto model)
+        {
+            if (model !=null)
+            {
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, true);
+                if (result.Succeeded)
+                {
+                    EmployeeManagerResponse employeeManagerResponse = new EmployeeManagerResponse()
+                    {
+                        Message = "Login successfully!",
+                    };
+                }
+            }
+            return new EmployeeManagerResponse
+            {
+                Message = "Login problem!!!",
+                IsSuccess = false,
+                //Errors = res.Errors.Select(e => e.Description)
+            };
+>>>>>>> Stashed changes
         }
 
         public async Task<EmployeeManagerResponse> RegisterUserAsync(CreateEmployeeDto model)

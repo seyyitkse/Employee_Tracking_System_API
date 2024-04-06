@@ -11,5 +11,9 @@ namespace TrackingProject.BusinessLayer.Abstract
     public interface IEmployeeService
     {
         Task<EmployeeManagerResponse> RegisterUserAsync(CreateEmployeeDto model);
+<<<<<<< Updated upstream
+=======
+        Task<EmployeeManagerResponse> LoginUserAsync(LoginEmployeeDto model);
+>>>>>>> Stashed changes
     }
 }
