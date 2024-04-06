@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-<<<<<<< Updated upstream
-=======
-using Microsoft.AspNetCore.Identity;
->>>>>>> Stashed changes
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TrackingProject.BusinessLayer.Abstract;
 using TrackingProject.DtoLayer.Dtos.EmployeeDto;
 
@@ -14,18 +9,11 @@ namespace TrackingProject.WebApi.Controllers
     public class AuthController : ControllerBase
     {
         private IEmployeeService _employeeService;
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         public AuthController(IEmployeeService employeeService)
         {
             _employeeService = employeeService;
         }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterAsync(CreateEmployeeDto model)
         {
@@ -40,10 +28,6 @@ namespace TrackingProject.WebApi.Controllers
             }
             return BadRequest("Some properties are not valid");
         }
-<<<<<<< Updated upstream
-    }
-}
-=======
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginEmployeeDto model)
         {
@@ -60,5 +44,4 @@ namespace TrackingProject.WebApi.Controllers
         }
     }
 }
- 
->>>>>>> Stashed changes
+

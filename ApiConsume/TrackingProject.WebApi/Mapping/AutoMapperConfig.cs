@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using TrackingProject.DtoLayer.Dtos.AnnouncementDto;
-using TrackingProject.DtoLayer.Dtos.PanelUserDto;
 using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.WebApi.Mapping

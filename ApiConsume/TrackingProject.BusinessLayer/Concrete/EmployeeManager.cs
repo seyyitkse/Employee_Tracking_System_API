@@ -7,12 +7,11 @@ namespace TrackingProject.BusinessLayer.Concrete
     public class EmployeeManager : IEmployeeService
     {
         private UserManager<IdentityUser> _userManager;
-<<<<<<< Updated upstream
 
         public EmployeeManager(UserManager<IdentityUser> userManager)
         {
             _userManager = userManager;
-=======
+        }
         private SignInManager<IdentityUser> _signInManager;
 
         public EmployeeManager(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
@@ -40,7 +39,6 @@ namespace TrackingProject.BusinessLayer.Concrete
                 IsSuccess = false,
                 //Errors = res.Errors.Select(e => e.Description)
             };
->>>>>>> Stashed changes
         }
 
         public async Task<EmployeeManagerResponse> RegisterUserAsync(CreateEmployeeDto model)
