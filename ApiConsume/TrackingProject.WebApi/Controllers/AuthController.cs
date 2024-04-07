@@ -15,7 +15,7 @@ namespace TrackingProject.WebApi.Controllers
             _employeeService = employeeService;
         }
         [HttpPost("Register")]
-        public async Task<IActionResult> RegisterAsync(CreateEmployeeDto model)
+        public async Task<IActionResult> RegisterAsync([FromBody]CreateEmployeeDto model)
         {
             if (ModelState.IsValid) 
             {
@@ -29,18 +29,18 @@ namespace TrackingProject.WebApi.Controllers
             return BadRequest("Some properties are not valid");
         }
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(LoginEmployeeDto model)
+        public async Task<IActionResult> LoginAsync([FromBody]LoginEmployeeDto model)
         {
-            var response = await _employeeService.LoginUserAsync(model);
-
-            if (response.IsSuccess)
+            if (ModelState.IsValid)
             {
-                return Ok(new { message = response.Message });
+                var result = await _employeeService.LoginUserAsync(model);
+                if (result.IsSuccess)
+                {
+                    return Ok(result);
+                }
+                return BadRequest(result);
             }
-            else
-            {
-                return BadRequest(new { message = response.Message });
-            }
+            return BadRequest("Some properties are not valid");
         }
     }
 }

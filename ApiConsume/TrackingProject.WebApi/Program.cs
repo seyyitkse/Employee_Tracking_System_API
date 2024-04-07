@@ -31,7 +31,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Password.RequiredLength = 5;
 }).AddEntityFrameworkStores<Context>().AddDefaultTokenProviders();
 
-
+var jwtIssuer = builder.Configuration["AuthSettings:Issuer"];
+var jwtKey = builder.Configuration["AuthSettings:Key"];
+var jwtAudience = builder.Configuration["AuthSettings:Audience"];
 builder.Services.AddAuthentication(auth =>
 {
     auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -42,10 +44,11 @@ builder.Services.AddAuthentication(auth =>
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidAudience = "ahmetseyyit",
-        ValidIssuer = "ahmetseyyit",
+        ValidAudience = jwtAudience,
+        ValidIssuer = jwtIssuer,
         RequireExpirationTime = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("This is the key use in encryption")),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+        ValidateIssuerSigningKey=true
     };
 });
 
