@@ -61,11 +61,11 @@ namespace TrackingProject.BusinessLayer.Concrete
                                notBefore: DateTime.Now,
                                signingCredentials: new SigningCredentials(key,SecurityAlgorithms.HmacSha256));
 
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenAsString = new JwtSecurityTokenHandler().WriteToken(token);
 
             return new EmployeeManagerResponse
             {
-                Message = tokenString,
+                Message = tokenAsString,
                 IsSuccess = true,
                 ExpireDate=token.ValidTo,
             };

@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
+using System.Security.Claims;
 using TrackingProject.BusinessLayer.Abstract;
 using TrackingProject.DtoLayer.Dtos.EmployeeDto;
+using TrackingProject.WebApi.Jwt;
 
 namespace TrackingProject.WebApi.Controllers
 {
@@ -14,6 +17,7 @@ namespace TrackingProject.WebApi.Controllers
         {
             _employeeService = employeeService;
         }
+
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterAsync([FromBody]CreateEmployeeDto model)
         {
@@ -36,7 +40,7 @@ namespace TrackingProject.WebApi.Controllers
                 var result = await _employeeService.LoginUserAsync(model);
                 if (result.IsSuccess)
                 {
-                    return Ok(result);
+                    return Ok(new {Token=result.Message});
                 }
                 return BadRequest(result);
             }
