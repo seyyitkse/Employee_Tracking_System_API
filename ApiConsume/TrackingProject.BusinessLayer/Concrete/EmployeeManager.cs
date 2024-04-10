@@ -94,6 +94,15 @@ namespace TrackingProject.BusinessLayer.Concrete
             var result = await _userManager.CreateAsync(identityuser, model.Password);
             if (result.Succeeded)
             {
+                //this section is added to assign default role to the user when a new user is created
+                if (identityuser.UserName=="ahmetseyyitkse@mail.com")
+                {
+                    await _userManager.AddToRoleAsync(identityuser, "Admin");
+                }
+                else
+                {
+                    await _userManager.AddToRoleAsync(identityuser, "Employee");
+                }
                 return new EmployeeManagerResponse
                 {
                     Message = "Employee created successfully!",
