@@ -2,9 +2,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.IdentityModel.Tokens;
-using System.Configuration;
 using System.Text;
 using TrackingProject.BusinessLayer.Abstract;
 using TrackingProject.BusinessLayer.Concrete;
@@ -31,28 +29,46 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Password.RequiredLength = 5;
 }).AddEntityFrameworkStores<Context>().AddDefaultTokenProviders();
 
-var jwtIssuer = builder.Configuration["AuthSettings:Issuer"];
-var jwtKey = builder.Configuration["AuthSettings:Key"];
-var jwtAudience = builder.Configuration["AuthSettings:Audience"];
-builder.Services.AddAuthentication(auth =>
-{
-    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+builder.Services.AddAuthorization(
+    options=>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidAudience = jwtAudience,
-        ValidIssuer = jwtIssuer,
-        RequireExpirationTime = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-        ValidateIssuerSigningKey=true
-    };
-});
+        options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin"));
+        options.AddPolicy("RequireEmployeeRole", policy => policy.RequireRole("Employee"));
+    });
 
 
+//var jwtIssuer = builder.Configuration["AuthSettings:Issuer"];
+//var jwtKey = builder.Configuration["AuthSettings:Key"];
+//var jwtAudience = builder.Configuration["AuthSettings:Audience"];
+//builder.Services.AddAuthentication(auth =>
+//{
+//    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//}).AddJwtBearer(options =>
+//{
+//    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+//    {
+//        ValidateIssuer = true,
+//        ValidateAudience = true,
+//        ValidAudience = jwtAudience,
+//        ValidIssuer = jwtIssuer,
+//        RequireExpirationTime = true,
+//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+//        ValidateIssuerSigningKey=true
+//    };
+//});
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
 builder.Services.AddScoped<IAnnouncementDal, EfAnnouncementDal>();
 builder.Services.AddScoped<IAnnouncementService, AnnouncementManager>();
 builder.Services.AddScoped<IAnnouncementTypeDal, EfAnnouncementTypeDal>();

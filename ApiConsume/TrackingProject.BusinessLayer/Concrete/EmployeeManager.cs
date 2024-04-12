@@ -45,29 +45,11 @@ namespace TrackingProject.BusinessLayer.Concrete
                 };
             }
 
-            var claim = new[]
-            {
-                new Claim("Email",model.Email),
-                new Claim(ClaimTypes.NameIdentifier,user.Id),
-            };
 
-            var key= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthSettings:Key"]));
-
-            var token = new JwtSecurityToken(
-                               issuer: _configuration["AuthSettings:Issuer"],
-                               audience: _configuration["AuthSettings:Audience"],
-                               claims: claim,
-                               expires: DateTime.Now.AddDays(30),
-                               notBefore: DateTime.Now,
-                               signingCredentials: new SigningCredentials(key,SecurityAlgorithms.HmacSha256));
-
-            var tokenAsString = new JwtSecurityTokenHandler().WriteToken(token);
 
             return new EmployeeManagerResponse
             {
-                Message = tokenAsString,
                 IsSuccess = true,
-                ExpireDate=token.ValidTo,
             };
         }
 
