@@ -11,8 +11,8 @@ using TrackingProject.DataAccessLayer.Concrete;
 namespace TrackingProject.DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240406092410_add_newdatabase_with_codefirst")]
-    partial class add_newdatabase_with_codefirst
+    [Migration("20240413105220_add_codefirst_database_with_identity")]
+    partial class add_codefirst_database_with_identity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -213,33 +213,6 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.AdminUser", b =>
-                {
-                    b.Property<int>("AdminID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("AdminID");
-
-                    b.ToTable("AdminUsers");
-                });
-
             modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.Announcement", b =>
                 {
                     b.Property<int>("ID")
@@ -289,36 +262,6 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.HasKey("DepartmentID");
 
                     b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.EmployeeUser", b =>
-                {
-                    b.Property<int>("EmployeeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("DepartmentID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("EmployeeID");
-
-                    b.ToTable("EmployeeUsers");
                 });
 
             modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.ScheduleType", b =>
