@@ -9,7 +9,6 @@ using System.Text;
 using TrackingProject.BusinessLayer.Abstract;
 using TrackingProject.DtoLayer.Dtos.EmployeeDto;
 using TrackingProject.EntityLayer.Concrete;
-using TrackingProject.WebApi.Jwt;
 
 namespace TrackingProject.WebApi.Controllers
 {
