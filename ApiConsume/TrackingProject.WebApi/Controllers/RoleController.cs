@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.WebApi.Controllers
@@ -15,26 +15,75 @@ namespace TrackingProject.WebApi.Controllers
         {
             _roleManager = roleManager;
         }
+        [HttpGet]
+        public async Task< IActionResult> GetRoles()
+        {
+            var roles =await _roleManager.Roles.ToListAsync();
+            return Ok(roles);
+        }
+        //[HttpPost]
+        //public async Task<IActionResult> CreateRole(ApplicationRole roleModel)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        // Check if the role already exists
+        //        bool roleExists = await _roleManager.RoleExistsAsync(roleModel?.RoleName);
+        //        if (roleExists)
+        //        {
+        //            ModelState.AddModelError("", "Role Already Exists");
+        //        }
+        //        else
+        //        {
+        //            // Create the role
+        //            // We just need to specify a unique role name to create a new role
+        //            ApplicationRole identityRole = new ApplicationRole
+        //            {
+        //                Name = roleModel?.RoleName
+        //            };
+        //            // Saves the role in the underlying AspNetRoles table
+        //            IdentityResult result = await _roleManager.CreateAsync(identityRole);
+        //            if (result.Succeeded)
+        //            {
+        //                return Ok($"'{roleModel.RoleName}' adlı rol başarıyla oluşturuldu.");
+        //            }         
+        //            return BadRequest("Rol oluşturma başarısız."); 
+        //        }
+        //    }
+        //    return Ok(" Hata!!!");
+        //}
         [HttpPost]
         public async Task<IActionResult> CreateRole(string roleName)
         {
-            if (string.IsNullOrWhiteSpace(roleName))
+            if (string.IsNullOrEmpty(roleName))
             {
-                return BadRequest("Rol adı boş olamaz.");
+                ModelState.AddModelError("", "Role name cannot be empty");
+                return BadRequest(ModelState);
             }
 
-            // Verilen rol adıyla yeni bir rol oluştur
-            var role = new ApplicationRole { Name = roleName };
-            var result = await _roleManager.CreateAsync(role);
+            // Check if the role already exists
+            bool roleExists = await _roleManager.RoleExistsAsync(roleName);
+            if (roleExists)
+            {
+                ModelState.AddModelError("", "Role already exists");
+                return BadRequest(ModelState);
+            }
 
+            // Create the role
+            ApplicationRole role = new ApplicationRole
+            {
+                Name=roleName,
+            };
+
+            IdentityResult result = await _roleManager.CreateAsync(role);
             if (result.Succeeded)
             {
-                return Ok($"'{roleName}' adlı rol başarıyla oluşturuldu.");
+                return Ok($"Role '{roleName}' created successfully.");
             }
-            else
-            {
-                return BadRequest("Rol oluşturma başarısız.");
-            }
+
+            // If role creation failed, return error message
+            ModelState.AddModelError("", "Failed to create role");
+            return BadRequest(ModelState);
         }
+
     }
 }

@@ -9,6 +9,7 @@ using TrackingProject.BusinessLayer.Concrete;
 using TrackingProject.DataAccessLayer.Abstract;
 using TrackingProject.DataAccessLayer.Concrete;
 using TrackingProject.DataAccessLayer.EntityFramework;
+using TrackingProject.EntityLayer.Concrete;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +22,7 @@ builder.Services.AddDbContext<Context>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
@@ -29,12 +30,12 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Password.RequiredLength = 5;
 }).AddEntityFrameworkStores<Context>().AddDefaultTokenProviders();
 
-builder.Services.AddAuthorization(
-    options=>
-    {
-        options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin"));
-        options.AddPolicy("RequireEmployeeRole", policy => policy.RequireRole("Employee"));
-    });
+//builder.Services.AddAuthorization(
+//    options=>
+//    {
+//        options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin"));
+//        options.AddPolicy("RequireEmployeeRole", policy => policy.RequireRole("Employee"));
+//    });
 
 
 //var jwtIssuer = builder.Configuration["AuthSettings:Issuer"];
@@ -57,18 +58,19 @@ builder.Services.AddAuthorization(
 //        ValidateIssuerSigningKey=true
 //    };
 //});
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
+
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuerSigningKey = true,
+//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+//                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+//            ValidateIssuer = false,
+//            ValidateAudience = false
+//        };
+//    });
 builder.Services.AddScoped<IAnnouncementDal, EfAnnouncementDal>();
 builder.Services.AddScoped<IAnnouncementService, AnnouncementManager>();
 builder.Services.AddScoped<IAnnouncementTypeDal, EfAnnouncementTypeDal>();
@@ -115,7 +117,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseCors("TrackingApiCors");
-app.UseAuthentication();
+//app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
