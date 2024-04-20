@@ -10,9 +10,9 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.DataAccessLayer.EntityFramework
 {
-    public class EfEmployeeDal : GenericRepository<EmployeeUser>, IEmployeeDal
+    public class EfApplicationUserDal : GenericRepository<ApplicationUser>, IApplicationUserDal
     {
-        public EfEmployeeDal(Context context) : base(context)
+        public EfApplicationUserDal(Context context) : base(context)
         {
         }
     }

@@ -38,9 +38,9 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 //    });
 
 
-//var jwtIssuer = builder.Configuration["AuthSettings:Issuer"];
-//var jwtKey = builder.Configuration["AuthSettings:Key"];
-//var jwtAudience = builder.Configuration["AuthSettings:Audience"];
+var jwtIssuer = builder.Configuration["AuthSettings:Issuer"];
+var jwtKey = builder.Configuration["AuthSettings:Key"];
+var jwtAudience = builder.Configuration["AuthSettings:Audience"];
 //builder.Services.AddAuthentication(auth =>
 //{
 //    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -53,24 +53,23 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 //        ValidateAudience = true,
 //        ValidAudience = jwtAudience,
 //        ValidIssuer = jwtIssuer,
-//        RequireExpirationTime = true,
 //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-//        ValidateIssuerSigningKey=true
+//        ValidateIssuerSigningKey = true
 //    };
 //});
 
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddJwtBearer(options =>
-//    {
-//        options.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            ValidateIssuerSigningKey = true,
-//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-//                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
-//            ValidateIssuer = false,
-//            ValidateAudience = false
-//        };
-//    });
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration.GetSection("AuthSettings:Token").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+        };
+    });
 builder.Services.AddScoped<IAnnouncementDal, EfAnnouncementDal>();
 builder.Services.AddScoped<IAnnouncementService, AnnouncementManager>();
 builder.Services.AddScoped<IAnnouncementTypeDal, EfAnnouncementTypeDal>();
@@ -85,12 +84,9 @@ builder.Services.AddScoped<IScheduleTypeService, ScheduleTypeManager>();
 builder.Services.AddScoped<IScheduleUserDal, EfScheduleUserDal>();
 builder.Services.AddScoped<IScheduleUserService, ScheduleUserManager>();
 
-builder.Services.AddScoped<IEmployeeDal, EfEmployeeDal>();
-builder.Services.AddScoped<IEmployeeService, EmployeeManager>();
+builder.Services.AddScoped<IApplicationUserDal, EfApplicationUserDal>();
+builder.Services.AddScoped<IApplicationUserService, ApplicationUserManager>();
 
-
-builder.Services.AddScoped<IEmployeeDal, EfEmployeeDal>();
-builder.Services.AddScoped<IEmployeeService, EmployeeManager>();
 
 builder.Services.AddCors(opt =>
 {
@@ -117,7 +113,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseCors("TrackingApiCors");
-//app.UseAuthentication();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

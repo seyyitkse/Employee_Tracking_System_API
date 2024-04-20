@@ -11,9 +11,9 @@ namespace TrackingProject.WebApi.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public EmployeeController(UserManager<IdentityUser> userManager)
+        public EmployeeController(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
