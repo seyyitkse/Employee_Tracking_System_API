@@ -40,39 +40,6 @@ namespace TrackingProject.WebApi.Controllers
             }
             return BadRequest("Some properties are not valid");
         }
-        //[HttpPost("Login")]
-        //public async Task<IActionResult> LoginAsync([FromBody] LoginApplicationUserDto model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var user = await _applicationUserService.LoginUserAsync(model);
-        //        if (user.IsSuccess)
-        //        {
-        //            var token = CreateToken(model);
-        //            return Ok(new {Token=token});
-        //        }
-        //        return BadRequest(user);
-        //    }
-        //    return BadRequest("Some properties are not valid");
-        //}
-        //private string CreateToken(LoginApplicationUserDto user)
-        //{
-        //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthSettings:Token"]));
-        //    List<Claim> claims = new List<Claim>();
-        //    {
-        //        new Claim(ClaimTypes.Email, user.Email);
-        //    };
-        //    var token = new JwtSecurityToken(
-        //                       issuer: _configuration["AuthSettings:Issuer"],
-        //                       audience: _configuration["AuthSettings:Audience"],
-        //                       claims: claims,
-        //                       expires: DateTime.Now.AddDays(30),
-        //                       notBefore: DateTime.Now,
-        //                       signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
-
-        //    var tokenAsString = new JwtSecurityTokenHandler().WriteToken(token);
-        //    return tokenAsString;
-        //}
         [HttpPost("Login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginApplicationUserDto model)
         {
@@ -81,8 +48,14 @@ namespace TrackingProject.WebApi.Controllers
                 var user = await _applicationUserService.LoginUserAsync(model);
                 if (user.IsSuccess)
                 {
-                    // Kullanıcı başarılı bir şekilde giriş yaptıysa JWT oluştur
-                    var token = CreateToken(model.Email);
+                    // Kullanıcı başarılı bir şekilde giriş yaptıysa JWT oluşturuyoruz
+                    var token = CreateToken(model);
+                    Response.Cookies.Append("jwt", token, new CookieOptions
+                    {
+                        HttpOnly = true,
+                        SameSite = SameSiteMode.Strict,
+                    });
+
                     return Ok(new { Token = token });
                 }
                 return BadRequest(user);
@@ -90,24 +63,24 @@ namespace TrackingProject.WebApi.Controllers
             return BadRequest("Some properties are not valid");
         }
 
-        private string CreateToken(string userEmail)
+        private string CreateToken(LoginApplicationUserDto user)
         {
             // Token için gerekli anahtar oluşturuluyor
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthSettings:Token"]));
 
             // Token içereceği iddia edilen (claims) bilgileri belirleniyor
             var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Email, userEmail)
-    };
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+            };
 
             // Token'in oluşturulma ve geçerlilik süreleri belirleniyor
             var token = new JwtSecurityToken(
                 issuer: _configuration["AuthSettings:Issuer"],
                 audience: _configuration["AuthSettings:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(30), // Token'in geçerlilik süresi
-                notBefore: DateTime.UtcNow, // Token'in ne zaman geçerli olacağı
+                expires: DateTime.Now.AddDays(30), // Token'in geçerlilik süresi
+                notBefore: DateTime.Now, // Token'in ne zaman geçerli olacağı
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
 
