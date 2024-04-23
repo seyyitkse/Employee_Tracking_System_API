@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrackingProject.BusinessLayer.Abstract;
@@ -19,11 +20,12 @@ namespace TrackingProject.WebApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult DepartmentList(Department Department)
+        public IActionResult DepartmentList()
         {
-            _departmentService.TInsert(Department);
-            return Ok();
+            var values = _departmentService.TGetList();
+            return Ok(values);
         }
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public IActionResult AddDepartment(Department Department)
         {

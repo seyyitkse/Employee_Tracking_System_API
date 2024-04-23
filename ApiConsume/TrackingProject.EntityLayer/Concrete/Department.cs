@@ -11,6 +11,11 @@ namespace TrackingProject.EntityLayer.Concrete
     {
         [Key]
         public int DepartmentID { get; set; }
-        public int Name { get; set; }
+        public string Name { get; set; }
+        public bool Status { get; set; }
+        public Department()
+        {
+            Status = true;
+        }
     }
 }
