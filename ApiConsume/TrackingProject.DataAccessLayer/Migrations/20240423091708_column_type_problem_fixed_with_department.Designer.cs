@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrackingProject.DataAccessLayer.Concrete;
 
@@ -10,9 +11,10 @@ using TrackingProject.DataAccessLayer.Concrete;
 namespace TrackingProject.DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240423091708_column_type_problem_fixed_with_department")]
+    partial class column_type_problem_fixed_with_department
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,6 +211,9 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<int>("EmployeeID")
+                        .HasColumnType("int");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -294,38 +299,30 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.ToTable("ScheduleTypes");
                 });
 
-            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.WeeklySchedule", b =>
+            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.ScheduleUser", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("DayOfWeek")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)");
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("Other")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
 
-                    b.Property<bool>("Overtime")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<int>("EmployeeID")
+                        .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
-                    b.Property<bool>("Vacation")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Working")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<int>("TypeID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("WeeklySchedules");
+                    b.ToTable("ScheduleUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -377,22 +374,6 @@ namespace TrackingProject.DataAccessLayer.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.WeeklySchedule", b =>
-                {
-                    b.HasOne("TrackingProject.EntityLayer.Concrete.ApplicationUser", "User")
-                        .WithMany("WeeklySchedules")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.ApplicationUser", b =>
-                {
-                    b.Navigation("WeeklySchedules");
                 });
 #pragma warning restore 612, 618
         }
