@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.WebApi.Controllers
 {
+    [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class RoleController : ControllerBase

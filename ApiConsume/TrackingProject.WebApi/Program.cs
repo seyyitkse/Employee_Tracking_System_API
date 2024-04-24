@@ -58,7 +58,11 @@ var jwtAudience = builder.Configuration["AuthSettings:Audience"];
 //    };
 //});
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(auth=>
+{
+    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -67,9 +71,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
                 .GetBytes(builder.Configuration.GetSection("AuthSettings:Token").Value)),
             ValidateIssuer = false,
+            ValidIssuer= builder.Configuration.GetSection("AuthSettings:Issuer").Value,
             ValidateAudience = false,
+            ValidAudience = builder.Configuration.GetSection("AuthSettings:Audience").Value,
+            RequireExpirationTime = false,
         };
     });
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => false;
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+});
+
 builder.Services.AddScoped<IAnnouncementDal, EfAnnouncementDal>();
 builder.Services.AddScoped<IAnnouncementService, AnnouncementManager>();
 builder.Services.AddScoped<IAnnouncementTypeDal, EfAnnouncementTypeDal>();
@@ -81,11 +94,14 @@ builder.Services.AddScoped<IDepartmentService, DepartmentManager>();
 builder.Services.AddScoped<IScheduleTypeDal, EfScheduleTypeDal>();
 builder.Services.AddScoped<IScheduleTypeService, ScheduleTypeManager>();
 
-builder.Services.AddScoped<IScheduleUserDal, EfScheduleUserDal>();
-builder.Services.AddScoped<IScheduleUserService, ScheduleUserManager>();
+builder.Services.AddScoped<IWeeklyScheduleDal, EfWeeklyScheduleDal>();
+builder.Services.AddScoped<IWeeklyScheduleService, WeeklyScheduleManager>();
 
 builder.Services.AddScoped<IApplicationUserDal, EfApplicationUserDal>();
 builder.Services.AddScoped<IApplicationUserService, ApplicationUserManager>();
+
+builder.Services.AddScoped<IRecognitionNotificationDal, EfRecognitionNotificationDal>();
+builder.Services.AddScoped<IRecognitionNotificationService, RecognitionNotificationManager>();
 
 
 builder.Services.AddCors(opt =>
@@ -113,6 +129,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseCors("TrackingApiCors");
+app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 
