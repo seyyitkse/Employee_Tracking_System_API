@@ -15,5 +15,10 @@ namespace TrackingProject.EntityLayer.Concrete
         public string? Content { get; set; }
         public DateTime Date { get; set; }
         public int TypeID { get; set; }
+        public bool Status { get; set; }
+        public Announcement()
+        {
+            Status = true;
+        }
     }
 }

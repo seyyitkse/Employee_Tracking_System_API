@@ -2,7 +2,7 @@
 
 namespace TrackingProject.DataAccessLayer.Abstract
 {
-    public interface IDepartmentDal:IGenericDal<Department>
+    public interface IRecognitionNotificationDal:IGenericDal<RecognitionNotification>
     {
     }
 }

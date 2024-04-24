@@ -10,11 +10,10 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.DataAccessLayer.EntityFramework
 {
-    public class EfScheduleUserDal:GenericRepository<ScheduleUser>,IScheduleUserDal
+    public class EfRecognitionNotificationDal : GenericRepository<RecognitionNotification>, IRecognitionNotificationDal
     {
-        public EfScheduleUserDal(Context context):base(context) 
+        public EfRecognitionNotificationDal(Context context) : base(context)
         {
-            
         }
     }
 }

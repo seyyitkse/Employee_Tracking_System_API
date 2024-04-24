@@ -7,7 +7,7 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.BusinessLayer.Abstract
 {
-    public interface IScheduleUserService : IGenericService<ScheduleUser>
+    public interface IWeeklyScheduleService : IGenericService<WeeklySchedule>
     {
     }
 }

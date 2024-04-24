@@ -7,7 +7,7 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.DataAccessLayer.Abstract
 {
-    public interface IScheduleUserDal:IGenericDal<ScheduleUser>
+    public interface IWeeklyScheduleDal:IGenericDal<WeeklySchedule>
     {       
     }
 }

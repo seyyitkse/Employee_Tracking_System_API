@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using TrackingProject.BusinessLayer.Abstract;
+using TrackingProject.DataAccessLayer.Abstract;
 using TrackingProject.DtoLayer.Dtos.ApplicationUserDto;
 using TrackingProject.EntityLayer.Concrete;
 
@@ -11,40 +12,18 @@ namespace TrackingProject.BusinessLayer.Concrete
         private UserManager<ApplicationUser> _userManager;
 
         private SignInManager<ApplicationUser> _signInManager;
+        private IApplicationUserDal _applicationUserDal;
 
         private IConfiguration _configuration;
-        public ApplicationUserManager(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
+
+        public ApplicationUserManager(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IApplicationUserDal applicationUserDal, IConfiguration configuration)
         {
-            _configuration = configuration;
             _userManager = userManager;
             _signInManager = signInManager;
+            _applicationUserDal = applicationUserDal;
+            _configuration = configuration;
         }
 
-        //public async Task<ApplicationUserManagerResponse> LoginUserAsync(LoginApplicationUserDto model)
-        //{
-        //    var user = await _userManager.FindByEmailAsync(model.Email);
-        //    if (user == null)
-        //    {
-        //        return new ApplicationUserManagerResponse
-        //        {
-        //            Message = "There is no user with that email address",
-        //            IsSuccess = false,
-        //        };
-        //    }
-        //    var result = await _userManager.CheckPasswordAsync(user, model.Password);
-        //    if (!result)
-        //    {
-        //        return new ApplicationUserManagerResponse
-        //        {
-        //            Message = "Invalid password",
-        //            IsSuccess = false,
-        //        };
-        //    }
-        //    return new ApplicationUserManagerResponse
-        //    {
-        //        IsSuccess = true,
-        //    };
-        //}
         public async Task<ApplicationUserManagerResponse> LoginUserAsync(LoginApplicationUserDto model)
         {
             // Kullanıcıyı e-posta adresine göre bul
@@ -129,6 +108,31 @@ namespace TrackingProject.BusinessLayer.Concrete
                 IsSuccess = false,
                 Errors = result.Errors.Select(e => e.Description)
             };
+        }
+
+        public void TDelete(ApplicationUser entity)
+        {
+            _userManager.DeleteAsync(entity);
+        }
+
+        public ApplicationUser TGetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<ApplicationUser> TGetList()
+        {
+            return _applicationUserDal.GetList();
+        }
+
+        public void TInsert(ApplicationUser entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TUpdate(ApplicationUser entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }
