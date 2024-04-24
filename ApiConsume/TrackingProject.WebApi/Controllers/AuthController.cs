@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,15 +18,16 @@ namespace TrackingProject.WebApi.Controllers
     {
         private IApplicationUserService _applicationUserService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthController(IApplicationUserService applicationUserService, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public AuthController(IApplicationUserService applicationUserService, UserManager<ApplicationUser> userManager, IConfiguration configuration,RoleManager<ApplicationRole> roleManager)
         {
+            _roleManager= roleManager;
             _applicationUserService = applicationUserService;
             _userManager = userManager;
             _configuration = configuration;
         }
-
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterAsync([FromBody] CreateApplicationUserDto model)
         {
@@ -53,7 +55,6 @@ namespace TrackingProject.WebApi.Controllers
                     Response.Cookies.Append("jwt", token, new CookieOptions
                     {
                         HttpOnly = true,
-                        SameSite = SameSiteMode.Strict,
                     });
 
                     return Ok(new { Token = token });
@@ -65,14 +66,24 @@ namespace TrackingProject.WebApi.Controllers
 
         private string CreateToken(LoginApplicationUserDto user)
         {
-            // Token için gerekli anahtar oluşturuluyor
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthSettings:Token"]));
+            //Kullanıcının rollerini veri tabanından alıyoruz
+            ApplicationUser userRole=_userManager.Users.FirstOrDefault(x=>x.Email==user.Email);
+            var roleNames=_userManager.GetRolesAsync(userRole).Result;
 
-            // Token içereceği iddia edilen (claims) bilgileri belirleniyor
+            // Token için gerekli anahtar oluşturuyoruz
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthSettings:Token"]));
+            
+            // Token içereceği iddia edilen (claims) bilgileri belirliyoruz
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),
             };
+
+            //Kullanıcının rollerini token içerisine ekliyoruz
+            foreach (var item in roleNames)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, item));
+            }
 
             // Token'in oluşturulma ve geçerlilik süreleri belirleniyor
             var token = new JwtSecurityToken(
