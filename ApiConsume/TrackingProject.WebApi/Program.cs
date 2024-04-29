@@ -103,6 +103,8 @@ builder.Services.AddScoped<IApplicationUserService, ApplicationUserManager>();
 builder.Services.AddScoped<IRecognitionNotificationDal, EfRecognitionNotificationDal>();
 builder.Services.AddScoped<IRecognitionNotificationService, RecognitionNotificationManager>();
 
+builder.Services.AddScoped<IUserImageDal, EfUserImageDal>();
+builder.Services.AddScoped<IUserImageService, UserImageManager>();
 
 builder.Services.AddCors(opt =>
 {

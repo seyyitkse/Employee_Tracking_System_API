@@ -12,6 +12,7 @@ namespace TrackingProject.DataAccessLayer.Concrete
         public DbSet<WeeklySchedule> WeeklySchedules{ get; set; }
         public DbSet<Department> Departments{ get; set; }
         public DbSet<RecognitionNotification> RecognitionNotifications{ get; set; }
+        public DbSet<UserProfileImage> UserImages{ get; set; }
         public Context(DbContextOptions<Context> options)
           : base(options) { }
     }
