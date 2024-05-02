@@ -11,8 +11,8 @@ using TrackingProject.DataAccessLayer.Concrete;
 namespace TrackingProject.DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240423091708_column_type_problem_fixed_with_department")]
-    partial class column_type_problem_fixed_with_department
+    [Migration("20240430130702_add_tables_with_db")]
+    partial class add_tables_with_db
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -211,9 +211,6 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("EmployeeID")
-                        .HasColumnType("int");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -285,6 +282,26 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.ToTable("Departments");
                 });
 
+            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.RecognitionNotification", b =>
+                {
+                    b.Property<int>("RecognitionID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("RecognitionID");
+
+                    b.ToTable("RecognitionNotifications");
+                });
+
             modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.ScheduleType", b =>
                 {
                     b.Property<int>("ID")
@@ -299,30 +316,61 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.ToTable("ScheduleTypes");
                 });
 
-            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.ScheduleUser", b =>
+            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.UserProfileImage", b =>
+                {
+                    b.Property<int>("ImageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeID")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("longblob");
+
+                    b.Property<string>("ImageMimeType")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("deneme")
+                        .HasColumnType("int");
+
+                    b.HasKey("ImageID");
+
+                    b.ToTable("UserImages");
+                });
+
+            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.WeeklySchedule", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("DayOfWeek")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                    b.Property<bool>("Other")
+                        .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("EmployeeID")
-                        .HasColumnType("int");
+                    b.Property<bool>("Overtime")
+                        .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int>("TypeID")
-                        .HasColumnType("int");
+                    b.Property<bool>("Vacation")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Working")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("ID");
 
-                    b.ToTable("ScheduleUsers");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WeeklySchedules");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -374,6 +422,22 @@ namespace TrackingProject.DataAccessLayer.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.WeeklySchedule", b =>
+                {
+                    b.HasOne("TrackingProject.EntityLayer.Concrete.ApplicationUser", "User")
+                        .WithMany("WeeklySchedules")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.ApplicationUser", b =>
+                {
+                    b.Navigation("WeeklySchedules");
                 });
 #pragma warning restore 612, 618
         }
