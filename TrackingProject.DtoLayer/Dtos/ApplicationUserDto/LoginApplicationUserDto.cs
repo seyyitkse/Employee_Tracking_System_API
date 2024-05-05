@@ -17,6 +17,5 @@ namespace TrackingProject.DtoLayer.Dtos.ApplicationUserDto
         [StringLength(50)]
         [MinLength(5)]
         public string Password { get; set; }
-        public int RoleID { get; set; }
     }
 }

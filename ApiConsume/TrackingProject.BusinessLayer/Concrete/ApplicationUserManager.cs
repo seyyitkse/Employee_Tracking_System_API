@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TrackingProject.BusinessLayer.Abstract;
 using TrackingProject.DataAccessLayer.Abstract;
@@ -53,7 +54,7 @@ namespace TrackingProject.BusinessLayer.Concrete
                 // Parola doğrulaması başarısız ise hata döndür
                 return new ApplicationUserManagerResponse
                 {
-                    Message = "Invalid password",
+                    Message = "Geçersiz şifre",
                     IsSuccess = false
                 };
             }
@@ -62,14 +63,24 @@ namespace TrackingProject.BusinessLayer.Concrete
         public async Task<ApplicationUserManagerResponse> RegisterUserAsync(CreateApplicationUserDto model)
         {
             if (model == null)
-                throw new NullReferenceException("Register model is null");
+                throw new NullReferenceException("Boş veriler var");
 
             if (model.Password != model.ConfirmPassword)
             {
-                ApplicationUserManagerResponse employeeManagerResponse1 = new ApplicationUserManagerResponse
+                return new ApplicationUserManagerResponse
                 {
-                    Message = "Confirm password doesn't match the password",
+                    Message = "Girdiğiniz parolalar eşleşmiyor.",
                     IsSuccess = false,
+                };
+            }
+
+            var existingUserByEmail = await _userManager.FindByEmailAsync(model.Mail);
+            if (existingUserByEmail != null)
+            {
+                return new ApplicationUserManagerResponse
+                {
+                    Message = "Bu e-posta adresiyle kayıtlı bir kullanıcı zaten var.",
+                    IsSuccess = false
                 };
             }
 
@@ -77,38 +88,31 @@ namespace TrackingProject.BusinessLayer.Concrete
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Email= model.Mail,
+                Email = model.Mail,
                 UserName = model.Mail,
+                DepartmentID = model.DepartmentID
             };
 
             var result = await _userManager.CreateAsync(identityuser, model.Password);
             if (result.Succeeded)
             {
-                //this section is added to assign default role to the user when a new user is created
-                if (identityuser.UserName == "ahmetseyyitkse@mail.com")
-                {
-                    await _userManager.AddToRoleAsync(identityuser, "Admin");
-                }
-                else
-                {
-                    await _userManager.AddToRoleAsync(identityuser, "Employee");
-                }
-                //await _userManager.AddToRoleAsync(identityuser, "Employee");
+                //await _userManager.AddToRoleAsync(identityuser, "Ogrenci");
 
                 return new ApplicationUserManagerResponse
                 {
-                    Message = "Employee created successfully!",
-                    IsSuccess = false,
+                    Message = "Kullanıcı oluşturma işlemi başarıyla gerçekleştirildi.",
+                    IsSuccess = true,
                     Errors = result.Errors.Select(e => e.Description)
                 };
             }
             return new ApplicationUserManagerResponse
             {
-                Message = "Employee did not create",
+                Message = "Kullanıcı oluşturulamadı!",
                 IsSuccess = false,
                 Errors = result.Errors.Select(e => e.Description)
             };
         }
+
 
         public void TDelete(ApplicationUser entity)
         {
@@ -117,7 +121,7 @@ namespace TrackingProject.BusinessLayer.Concrete
 
         public ApplicationUser TGetById(int id)
         {
-            throw new NotImplementedException();
+            return _applicationUserDal.GetById(id);
         }
 
         public List<ApplicationUser> TGetList()
@@ -127,12 +131,12 @@ namespace TrackingProject.BusinessLayer.Concrete
 
         public void TInsert(ApplicationUser entity)
         {
-            throw new NotImplementedException();
+            _applicationUserDal.Insert(entity);
         }
 
         public void TUpdate(ApplicationUser entity)
         {
-            throw new NotImplementedException();
+            _applicationUserDal.Update(entity);
         }
     }
 }
