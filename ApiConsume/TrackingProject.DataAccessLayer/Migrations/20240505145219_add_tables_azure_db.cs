@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TrackingProject.DataAccessLayer.Migrations
 {
-    public partial class add_tables_with_db : Migration
+    public partial class add_tables_azure_db : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

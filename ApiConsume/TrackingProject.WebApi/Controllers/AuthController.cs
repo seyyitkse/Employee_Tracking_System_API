@@ -28,19 +28,40 @@ namespace TrackingProject.WebApi.Controllers
             _userManager = userManager;
             _configuration = configuration;
         }
-        [HttpPost("Register")]
-        public async Task<IActionResult> RegisterAsync([FromBody] CreateApplicationUserDto model)
+        [HttpPost("RegisterEmployee")]
+        public async Task<IActionResult> RegisterStudentAsync([FromBody] CreateApplicationUserDto model)
         {
             if (ModelState.IsValid)
             {
                 var result = await _applicationUserService.RegisterUserAsync(model);
                 if (result.IsSuccess)
                 {
+                    var user = await _userManager.FindByEmailAsync(model.Mail);
+                    await _userManager.AddToRoleAsync(user, "Employee");
+
                     return Ok(result);
                 }
                 return BadRequest(result);
             }
-            return BadRequest("Some properties are not valid");
+            return BadRequest("Bazı değerler girilmedi!");
+        }
+
+        [HttpPost("RegisterAdmin")]
+        public async Task<IActionResult> RegisterTeacherAsync([FromBody] CreateApplicationUserDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _applicationUserService.RegisterUserAsync(model);
+                if (result.IsSuccess)
+                {
+                    var user = await _userManager.FindByEmailAsync(model.Mail);
+                    await _userManager.AddToRoleAsync(user, "Admin");
+
+                    return Ok(result);
+                }
+                return BadRequest(result);
+            }
+            return BadRequest("Bazı değerler girilmedi!");
         }
         [HttpPost("Login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginApplicationUserDto model)

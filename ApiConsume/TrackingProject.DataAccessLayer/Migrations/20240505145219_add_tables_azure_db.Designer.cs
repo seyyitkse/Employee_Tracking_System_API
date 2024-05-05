@@ -11,8 +11,8 @@ using TrackingProject.DataAccessLayer.Concrete;
 namespace TrackingProject.DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240430130702_add_tables_with_db")]
-    partial class add_tables_with_db
+    [Migration("20240505145219_add_tables_azure_db")]
+    partial class add_tables_azure_db
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
