@@ -4,7 +4,7 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.DataAccessLayer.Concrete
 {
-    public class Context:IdentityDbContext<ApplicationUser,ApplicationRole,string>
+    public class Context:IdentityDbContext<ApplicationUser,ApplicationRole,int>
     {
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<AnnouncementType> AnnouncementTypes{ get; set; }
