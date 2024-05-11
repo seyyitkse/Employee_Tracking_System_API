@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrackingProject.DataAccessLayer.Concrete;
 
@@ -10,9 +11,10 @@ using TrackingProject.DataAccessLayer.Concrete;
 namespace TrackingProject.DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240510104212_update_weekly_schedule_columns")]
+    partial class update_weekly_schedule_columns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -359,9 +361,6 @@ namespace TrackingProject.DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ApplicationUserId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
@@ -371,12 +370,16 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.Property<long>("Starttime")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("UserId")
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId1")
                         .HasColumnType("int");
 
                     b.HasKey("ScheduleID");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("WeeklySchedules");
                 });
@@ -434,9 +437,13 @@ namespace TrackingProject.DataAccessLayer.Migrations
 
             modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.WeeklySchedule", b =>
                 {
-                    b.HasOne("TrackingProject.EntityLayer.Concrete.ApplicationUser", null)
+                    b.HasOne("TrackingProject.EntityLayer.Concrete.ApplicationUser", "User")
                         .WithMany("WeeklySchedules")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.ApplicationUser", b =>
