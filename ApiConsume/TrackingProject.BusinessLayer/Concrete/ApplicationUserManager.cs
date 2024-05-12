@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TrackingProject.BusinessLayer.Abstract;
 using TrackingProject.DataAccessLayer.Abstract;
+using TrackingProject.DataAccessLayer.Concrete;
 using TrackingProject.DtoLayer.Dtos.ApplicationUserDto;
 using TrackingProject.EntityLayer.Concrete;
 
@@ -59,7 +60,45 @@ namespace TrackingProject.BusinessLayer.Concrete
                 };
             }
         }
+        public async Task<ApplicationUserManagerResponse> MobileLoginAsync(LoginApplicationUserDto model)
+        {
+            // Kullanıcıyı e-posta adresine göre bul
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                // Kullanıcı bulunamazsa hata döndür
+                return new ApplicationUserManagerResponse
+                {
+                    Message = "There is no user with that email address",
+                    IsSuccess = false
+                };
+            }
 
+            // Kullanıcının parolasını doğruluyoruz
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, lockoutOnFailure: false);
+            if (result.Succeeded)
+            {
+                // Giriş başarılı ise AspNetUserLogins tablosuna bir giriş ekliyoruz
+                var loginEntry = new UserLoginInfo("Mobile", user.Email, "Mobile User");
+                await _userManager.AddLoginAsync(user, loginEntry);
+
+                // Başarılı yanıt döndür
+                return new ApplicationUserManagerResponse
+                {
+                    Message= "Giriş başarılı",
+                    IsSuccess = true
+                };
+            }
+            else
+            {
+                // Parola doğrulaması başarısız ise hata döndür
+                return new ApplicationUserManagerResponse
+                {
+                    Message = "Geçersiz şifre",
+                    IsSuccess = false
+                };
+            }
+        }
         public async Task<ApplicationUserManagerResponse> RegisterUserAsync(CreateApplicationUserDto model)
         {
             if (model == null)

@@ -7,5 +7,6 @@ namespace TrackingProject.BusinessLayer.Abstract
     {
         Task<ApplicationUserManagerResponse> RegisterUserAsync(CreateApplicationUserDto model);
         Task<ApplicationUserManagerResponse> LoginUserAsync(LoginApplicationUserDto model);
+        Task<ApplicationUserManagerResponse> MobileLoginAsync(LoginApplicationUserDto model);
     }
 }

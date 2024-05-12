@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +13,7 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.WebApi.Controllers
 {
+    [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -29,7 +31,7 @@ namespace TrackingProject.WebApi.Controllers
             _configuration = configuration;
         }
         [HttpPost("RegisterEmployee")]
-        public async Task<IActionResult> RegisterStudentAsync([FromBody] CreateApplicationUserDto model)
+        public async Task<IActionResult> RegisterEmployeeAsync([FromBody] CreateApplicationUserDto model)
         {
             if (ModelState.IsValid)
             {
@@ -47,7 +49,7 @@ namespace TrackingProject.WebApi.Controllers
         }
 
         [HttpPost("RegisterAdmin")]
-        public async Task<IActionResult> RegisterTeacherAsync([FromBody] CreateApplicationUserDto model)
+        public async Task<IActionResult> RegisterAdminAsync([FromBody] CreateApplicationUserDto model)
         {
             if (ModelState.IsValid)
             {
@@ -71,20 +73,53 @@ namespace TrackingProject.WebApi.Controllers
                 var user = await _applicationUserService.LoginUserAsync(model);
                 if (user.IsSuccess)
                 {
-                    // Kullanıcı başarılı bir şekilde giriş yaptıysa JWT oluşturuyoruz
                     var token = CreateToken(model);
-                    Response.Cookies.Append("jwt", token, new CookieOptions
-                    {
-                        HttpOnly = true,
-                    });
-
                     return Ok(new { Token = token });
                 }
                 return BadRequest(user);
             }
             return BadRequest("Some properties are not valid");
         }
+        //[HttpPost("mobileLogin")]
+        //public async Task<IActionResult> MobileLoginAsync([FromBody] LoginApplicationUserDto model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = await _applicationUserService.LoginUserAsync(model);
+        //        UserLoginInfo login = new UserLoginInfo(model.Email, model.Email, "deneme");
+        //        var mobileLogin=await _userManager.AddLoginAsync(user,login);
+        //        if (user.IsSuccess)
+        //        {
+        //            var token = CreateToken(model);
+        //            return Ok(new { Token = token });
+        //        }
+        //        return BadRequest(user);
+        //    }
+        //    return BadRequest("Some properties are not valid");
+        //}
+        [HttpPost("mobileLogin")]
+        public async Task<IActionResult> MobileLoginAsync([FromBody] LoginApplicationUserDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _applicationUserService.MobileLoginAsync(model);
+                if (response.IsSuccess)
+                {
+                    var token = CreateToken(model);
+                    return Ok(new { Token = token });
+                }
+                return BadRequest(response);
+            }
+            return BadRequest("Some properties are not valid");
+        }
 
+        //public async Task<List<UserLoginHistory>> GetUserLoginHistory(string userId)
+        //{
+        //    return await _context.UserLoginHistory
+        //        .Where(x => x.UserId == userId)
+        //        .OrderByDescending(x => x.LoginTime)
+        //        .ToListAsync();
+        //}
         private string CreateToken(LoginApplicationUserDto user)
         {
             //Kullanıcının rollerini veri tabanından alıyoruz
