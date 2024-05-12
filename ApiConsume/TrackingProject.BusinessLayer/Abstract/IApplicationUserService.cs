@@ -1,4 +1,5 @@
-﻿using TrackingProject.DtoLayer.Dtos.ApplicationUserDto;
+﻿using Microsoft.AspNetCore.Identity;
+using TrackingProject.DtoLayer.Dtos.ApplicationUserDto;
 using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.BusinessLayer.Abstract
@@ -8,5 +9,7 @@ namespace TrackingProject.BusinessLayer.Abstract
         Task<ApplicationUserManagerResponse> RegisterUserAsync(CreateApplicationUserDto model);
         Task<ApplicationUserManagerResponse> LoginUserAsync(LoginApplicationUserDto model);
         Task<ApplicationUserManagerResponse> MobileLoginAsync(LoginApplicationUserDto model);
+        Task<ApplicationUserManagerResponse> MobileLogoutAsync(string email);
+
     }
 }

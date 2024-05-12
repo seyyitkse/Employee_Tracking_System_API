@@ -62,14 +62,25 @@ namespace TrackingProject.BusinessLayer.Concrete
         }
         public async Task<ApplicationUserManagerResponse> MobileLoginAsync(LoginApplicationUserDto model)
         {
-            // Kullanıcıyı e-posta adresine göre bul
+            // Kullanıcıyı e-posta adresine göre buluyoruz
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 // Kullanıcı bulunamazsa hata döndür
                 return new ApplicationUserManagerResponse
                 {
-                    Message = "There is no user with that email address",
+                    Message = "Bu maile sahip bir kullanıcı bulunamadı.",
+                    IsSuccess = false
+                };
+            }
+
+            // Kullanıcının başka bir cihazda oturum açıp açmadığını kontrol ediyoruz
+            var existingLogin = await _userManager.GetLoginsAsync(user);
+            if (existingLogin.Any())
+            {
+                return new ApplicationUserManagerResponse
+                {
+                    Message = "Lütfen diğer cihazdaki oturumu kapatınız",
                     IsSuccess = false
                 };
             }
@@ -82,16 +93,16 @@ namespace TrackingProject.BusinessLayer.Concrete
                 var loginEntry = new UserLoginInfo("Mobile", user.Email, "Mobile User");
                 await _userManager.AddLoginAsync(user, loginEntry);
 
-                // Başarılı yanıt döndür
+                // Başarılı yanıt döndürüyoruz
                 return new ApplicationUserManagerResponse
                 {
-                    Message= "Giriş başarılı",
+                    Message = "Giriş başarılı",
                     IsSuccess = true
                 };
             }
             else
             {
-                // Parola doğrulaması başarısız ise hata döndür
+                // Parola doğrulaması başarısız ise hata döndürüyoruz
                 return new ApplicationUserManagerResponse
                 {
                     Message = "Geçersiz şifre",
@@ -151,7 +162,34 @@ namespace TrackingProject.BusinessLayer.Concrete
                 Errors = result.Errors.Select(e => e.Description)
             };
         }
+        public async Task<ApplicationUserManagerResponse> MobileLogoutAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return new ApplicationUserManagerResponse
+                {
+                    Message = "Bu e-posta adresine sahip bir kullanıcı bulunamadı.",
+                    IsSuccess = false
+                };
+            }
 
+            // Kullanıcının tüm girişlerini silmek için AspNetUserLogins tablosundan girişleri siliyoruz
+            var loginInfo = await _userManager.GetLoginsAsync(user);
+            foreach (var login in loginInfo)
+            {
+                await _userManager.RemoveLoginAsync(user, login.LoginProvider, login.ProviderKey);
+            }
+
+            // Kullanıcın çıkış yapması için gerekli işlemleri yapıyoruz
+            await _signInManager.SignOutAsync();
+
+            return new ApplicationUserManagerResponse
+            {
+                Message = "Kullanıcı başarıyla çıkış yaptı.",
+                IsSuccess = true
+            };
+        }
 
         public void TDelete(ApplicationUser entity)
         {

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -8,7 +7,6 @@ using System.Security.Claims;
 using System.Text;
 using TrackingProject.BusinessLayer.Abstract;
 using TrackingProject.DtoLayer.Dtos.ApplicationUserDto;
-using TrackingProject.DtoLayer.Dtos.EmployeeDto;
 using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.WebApi.Controllers
@@ -80,23 +78,6 @@ namespace TrackingProject.WebApi.Controllers
             }
             return BadRequest("Some properties are not valid");
         }
-        //[HttpPost("mobileLogin")]
-        //public async Task<IActionResult> MobileLoginAsync([FromBody] LoginApplicationUserDto model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var user = await _applicationUserService.LoginUserAsync(model);
-        //        UserLoginInfo login = new UserLoginInfo(model.Email, model.Email, "deneme");
-        //        var mobileLogin=await _userManager.AddLoginAsync(user,login);
-        //        if (user.IsSuccess)
-        //        {
-        //            var token = CreateToken(model);
-        //            return Ok(new { Token = token });
-        //        }
-        //        return BadRequest(user);
-        //    }
-        //    return BadRequest("Some properties are not valid");
-        //}
         [HttpPost("mobileLogin")]
         public async Task<IActionResult> MobileLoginAsync([FromBody] LoginApplicationUserDto model)
         {
@@ -106,20 +87,26 @@ namespace TrackingProject.WebApi.Controllers
                 if (response.IsSuccess)
                 {
                     var token = CreateToken(model);
-                    return Ok(new { Token = token });
+                    return Ok(new { Token = token, Message = response.Message });
                 }
                 return BadRequest(response);
             }
             return BadRequest("Some properties are not valid");
         }
-
-        //public async Task<List<UserLoginHistory>> GetUserLoginHistory(string userId)
-        //{
-        //    return await _context.UserLoginHistory
-        //        .Where(x => x.UserId == userId)
-        //        .OrderByDescending(x => x.LoginTime)
-        //        .ToListAsync();
-        //}
+        [HttpPost("mobileLogout")]
+        public async Task<IActionResult> LogoutAsync([FromBody] LogoutApplicationUserDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _applicationUserService.MobileLogoutAsync(model.Email);
+                if (response.IsSuccess)
+                {
+                    return Ok(new { Message = response.Message });
+                }
+                return BadRequest(response);
+            }
+            return BadRequest("Some properties are not valid");
+        }
         private string CreateToken(LoginApplicationUserDto user)
         {
             //Kullanıcının rollerini veri tabanından alıyoruz
@@ -155,6 +142,32 @@ namespace TrackingProject.WebApi.Controllers
             var tokenAsString = new JwtSecurityTokenHandler().WriteToken(token);
             return tokenAsString;
         }
+        //public async Task<List<UserLoginHistory>> GetUserLoginHistory(string userId)
+        //{
+        //    return await _context.UserLoginHistory
+        //        .Where(x => x.UserId == userId)
+        //        .OrderByDescending(x => x.LoginTime)
+        //        .ToListAsync();
+        //}
+        // 1. Enable 2FA for the user
+        //        var user = await _userManager.FindByEmailAsync(model.Email);
+        //        await _userManager.SetTwoFactorEnabledAsync(user, true);
+
+        //        // 2. Generate a 2FA token
+        //        var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+
+        //        // 3. Send the 2FA token to the user
+        //        // This will depend on your method of communication, but here's a basic example for email:
+        //        await _emailSender.SendEmailAsync(user.Email, "Your authentication code", $"Your two-factor authentication code is: {token}");
+
+        //        // 4. Verify the 2FA token provided by the user
+        //        var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(user, "Email", model.Token);
+        //if (!is2faTokenValid)
+        //{
+        //    return BadRequest("Invalid token.");
+        //    }
+
+        //    // Continue with sign in...
     }
 }
 
