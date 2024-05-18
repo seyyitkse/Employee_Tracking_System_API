@@ -2,7 +2,7 @@
 
 namespace TrackingProject.DataAccessLayer.Abstract
 {
-    public interface IRFIDExampleDal:IGenericDal<RFIDExample>
+    public interface IAlertDal:IGenericDal<Alert>
     {
     }
 }

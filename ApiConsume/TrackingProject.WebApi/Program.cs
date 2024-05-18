@@ -106,12 +106,15 @@ builder.Services.AddScoped<IRecognitionNotificationService, RecognitionNotificat
 builder.Services.AddScoped<IUserImageDal, EfUserImageDal>();
 builder.Services.AddScoped<IUserImageService, UserImageManager>();
 
+builder.Services.AddScoped<IAlertDal, EFAlertDal>();
+builder.Services.AddScoped<IAlertService, AlertManager>();
+
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("TrackingApiCors", opts =>
-    {
+                      {
         opts.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-    });
+                      });
 });
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
@@ -124,12 +127,10 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseCors("TrackingApiCors");
 app.UseCookiePolicy();
 app.UseAuthentication();

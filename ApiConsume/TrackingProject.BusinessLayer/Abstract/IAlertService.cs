@@ -2,7 +2,7 @@
 
 namespace TrackingProject.BusinessLayer.Abstract
 {
-    public interface IRFIDExampleService:IGenericService<RFIDExample>
+    public interface IAlertService:IGenericService<Alert>
     {
     }
 }

@@ -5,9 +5,9 @@ using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.DataAccessLayer.EntityFramework
 {
-    public class EFRFIDExampleDal : GenericRepository<RFIDExample>, IRFIDExampleDal
+    public class EFAlertDal : GenericRepository<Alert>, IAlertDal
     {
-        public EFRFIDExampleDal(Context context) : base(context)
+        public EFAlertDal(Context context) : base(context)
         {
         }
     }
