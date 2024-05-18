@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrackingProject.DataAccessLayer.Concrete;
 
@@ -10,9 +11,10 @@ using TrackingProject.DataAccessLayer.Concrete;
 namespace TrackingProject.DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240516073734_update_recognition_notification_table")]
+    partial class update_recognition_notification_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,32 +118,6 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.Alert", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Alerts");
                 });
 
             modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.Announcement", b =>
@@ -323,6 +299,23 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.HasKey("RecognitionID");
 
                     b.ToTable("RecognitionNotifications");
+                });
+
+            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.RFIDExample", b =>
+                {
+                    b.Property<int>("RFIDId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("RFIDName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RFIDNo")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("RFIDId");
+
+                    b.ToTable("RFIDExamples");
                 });
 
             modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.ScheduleType", b =>
