@@ -25,7 +25,6 @@ namespace TrackingProject.WebApi.Controllers
             var values = _departmentService.TGetList();
             return Ok(values);
         }
-        [Authorize(Roles ="Admin")]
         [HttpPost]
         public IActionResult AddDepartment(Department Department)
         {

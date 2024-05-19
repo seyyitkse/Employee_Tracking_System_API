@@ -6,8 +6,8 @@ namespace TrackingProject.EntityLayer.Concrete
     {
         [Key]
         public int RecognitionID { get; set; }
-        public string? Username{ get; set; }
+        public string? Name{ get; set; }
         public string? Message{ get; set; }
-        public DateTime Time { get; set; }
+        public long DateTime { get; set; }
     }
 }

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TrackingProject.BusinessLayer.Abstract;
 using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.WebApi.Controllers
 {
+    [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class RecognitionNotificationsController : ControllerBase

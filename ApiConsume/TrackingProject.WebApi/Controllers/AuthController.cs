@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TrackingProject.BusinessLayer.Abstract;
+using TrackingProject.DataAccessLayer.Concrete;
 using TrackingProject.DtoLayer.Dtos.ApplicationUserDto;
 using TrackingProject.EntityLayer.Concrete;
 
@@ -20,6 +21,7 @@ namespace TrackingProject.WebApi.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly Context _context;
 
         public AuthController(IApplicationUserService applicationUserService, UserManager<ApplicationUser> userManager, IConfiguration configuration,RoleManager<ApplicationRole> roleManager)
         {
@@ -86,8 +88,7 @@ namespace TrackingProject.WebApi.Controllers
                 var response = await _applicationUserService.MobileLoginAsync(model);
                 if (response.IsSuccess)
                 {
-                    var token = CreateToken(model);
-                    return Ok(new { Token = token, Message = response.Message });
+                    return Ok(new {response.Message });
                 }
                 return BadRequest(response);
             }
@@ -110,23 +111,27 @@ namespace TrackingProject.WebApi.Controllers
         private string CreateToken(LoginApplicationUserDto user)
         {
             //Kullanıcının rollerini veri tabanından alıyoruz
-            ApplicationUser userRole=_userManager.Users.FirstOrDefault(x=>x.Email==user.Email);
-            var roleNames=_userManager.GetRolesAsync(userRole).Result;
-
+            ApplicationUser userRole = _userManager.Users.FirstOrDefault(x => x.Email == user.Email);
+            var roleNames = _userManager.GetRolesAsync(userRole).Result;
+            string joinRoleName = string.Join(',', roleNames);
+            string name = userRole.FirstName+" "+userRole.LastName;
+            //int departmentId = userRole.DepartmentID;
+            //var department = _context.Departments.FirstOrDefault(d => d.DepartmentID == departmentId);
+            //string departmentName = department != null ? department.Name : "";
+            int userID = userRole.Id;
             // Token için gerekli anahtar oluşturuyoruz
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthSettings:Token"]));
             
             // Token içereceği iddia edilen (claims) bilgileri belirliyoruz
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("Mail", user.Email),
+                new Claim("Username", userRole.UserName),
+                new Claim("Name", name),
+                new Claim("Role", joinRoleName),
+                //new Claim("Department", departmentName),
+                new Claim("UserID", userID.ToString())
             };
-
-            //Kullanıcının rollerini token içerisine ekliyoruz
-            foreach (var item in roleNames)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, item));
-            }
 
             // Token'in oluşturulma ve geçerlilik süreleri belirleniyor
             var token = new JwtSecurityToken(
