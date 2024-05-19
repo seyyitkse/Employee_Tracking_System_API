@@ -5,25 +5,10 @@ namespace TrackingProject.EntityLayer.Concrete
     public class WeeklySchedule
     {
         [Key]
-        public int ID { get; set; }
-
-        [Required]
-        [StringLength(10)]
-        public string? DayOfWeek { get; set; }
-
-        [Required]
-        public bool Working { get; set; }
-
-        [Required]
-        public bool Overtime { get; set; }
-
-        [Required]
-        public bool Vacation { get; set; }
-
-        [Required]
-        public bool Other { get; set; }
-
-        public string UserId { get; set; }
-        public virtual ApplicationUser User { get; set; }
+        public int ScheduleID { get; set; }
+        public long Starttime { get; set; }
+        public long Endtime { get; set; }
+        public string? Description { get; set; }
+        public int UserId { get; set; }
     }
 }
