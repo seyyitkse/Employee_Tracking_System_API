@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TrackingProject.BusinessLayer.Abstract;
 using TrackingProject.EntityLayer.Concrete;
@@ -23,7 +21,7 @@ namespace TrackingProject.WebApi.Controllers
         {
             var values=_announcementService.TGetList();
             return Ok(values);
-        }
+        }  
         [HttpPost]
         public IActionResult AddAnnouncement(Announcement Announcement)
         {
