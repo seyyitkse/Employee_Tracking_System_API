@@ -15,7 +15,7 @@ using TrackingProject.EntityLayer.Concrete;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
-
+builder.Services.AddHttpClient();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<Context>(options =>
 {

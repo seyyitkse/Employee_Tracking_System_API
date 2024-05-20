@@ -47,6 +47,7 @@ namespace TrackingProject.BusinessLayer.Concrete
                 // Giriş başarılı ise başarılı yanıt döndür
                 return new ApplicationUserManagerResponse
                 {
+                    Message = "Giriş başarılı!",
                     IsSuccess = true
                 };
             }
@@ -73,25 +74,25 @@ namespace TrackingProject.BusinessLayer.Concrete
                     IsSuccess = false
                 };
             }
-
+            //burası sonradan tekrar açılacak!
             // Kullanıcının başka bir cihazda oturum açıp açmadığını kontrol ediyoruz
-            var existingLogin = await _userManager.GetLoginsAsync(user);
-            if (existingLogin.Any())
-            {
-                return new ApplicationUserManagerResponse
-                {
-                    Message = "Lütfen diğer cihazdaki oturumu kapatınız",
-                    IsSuccess = false
-                };
-            }
+            //var existingLogin = await _userManager.GetLoginsAsync(user);
+            //if (existingLogin.Any())
+            //{
+            //    return new ApplicationUserManagerResponse
+            //    {
+            //        Message = "Lütfen diğer cihazdaki oturumu kapatınız",
+            //        IsSuccess = false
+            //    };
+            //}
 
             // Kullanıcının parolasını doğruluyoruz
             var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, lockoutOnFailure: false);
             if (result.Succeeded)
             {
                 // Giriş başarılı ise AspNetUserLogins tablosuna bir giriş ekliyoruz
-                var loginEntry = new UserLoginInfo("Mobile", user.Email, "Mobile User");
-                await _userManager.AddLoginAsync(user, loginEntry);
+                //var loginEntry = new UserLoginInfo("Mobile", user.Email, "Mobile User");
+                //await _userManager.AddLoginAsync(user, loginEntry);
 
                 // Başarılı yanıt döndürüyoruz
                 return new ApplicationUserManagerResponse

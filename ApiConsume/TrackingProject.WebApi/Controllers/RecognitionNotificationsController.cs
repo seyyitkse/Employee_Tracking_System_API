@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 using TrackingProject.BusinessLayer.Abstract;
+using TrackingProject.DataAccessLayer.Concrete;
 using TrackingProject.EntityLayer.Concrete;
 
 namespace TrackingProject.WebApi.Controllers
@@ -11,11 +13,15 @@ namespace TrackingProject.WebApi.Controllers
     public class RecognitionNotificationsController : ControllerBase
     {
         IRecognitionNotificationService _recognitionNotificationService;
-
-        public RecognitionNotificationsController(IRecognitionNotificationService recognitionNotificationService)
+        private readonly Context _context;
+        private readonly IAlertService _alertService;
+        public RecognitionNotificationsController(IRecognitionNotificationService recognitionNotificationService, Context context, IAlertService alertService)
         {
             _recognitionNotificationService = recognitionNotificationService;
+            _context = context;
+            _alertService = alertService;
         }
+
         [HttpGet]
         public IActionResult NotificationList()
         {
@@ -23,11 +29,58 @@ namespace TrackingProject.WebApi.Controllers
             return Ok(values);
         }
         [HttpPost]
-        public IActionResult AddNotification(RecognitionNotification notification)
+        public IActionResult AddNotification([FromBody] RecognitionNotification notification)
         {
+            if (notification == null)
+            {
+                return BadRequest("Notification is required.");
+            }
+
+            // Attempt to find the user by their first name
+            var user = _context.Users.FirstOrDefault(x => x.FirstName == notification.Name);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            notification.Time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            // Assign user information to the notification
+            notification.Message = "Kullanıcı giriş yaptı.";
+            notification.UserId = user.Id;
+
+            // Convert the Unix timestamp to DateTime
+            DateTime dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)notification.Time).DateTime;
+
+            // Define working hours
+            TimeSpan start = new TimeSpan(8, 0, 0); // 8:00 AM
+            TimeSpan end = new TimeSpan(17, 0, 0); // 5:00 PM
+            TimeSpan now = dateTime.TimeOfDay;
+
+            // Create the alert object
+            var alert = new Alert
+            {
+                Time = notification.Time,
+                UserId = notification.UserId
+            };
+
+            if (now >= start && now <= end)
+            {
+                alert.Message = "Kullanıcı mesai saatlerinde giriş yaptı.";
+            }
+            else
+            {
+                alert.Message = "Kullanıcı mesai saatleri dışında giriş yaptı.";
+            }
+
+            // Insert the alert using the alert service
+            _alertService.TInsert(alert);
+
+            // Insert the notification using the notification service
             _recognitionNotificationService.TInsert(notification);
-            return Ok();
+
+            return Ok("Giriş başarılı!");
         }
+
         [HttpDelete]
         public IActionResult DeleteNotification(int id)
         {

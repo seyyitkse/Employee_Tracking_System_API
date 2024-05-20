@@ -80,6 +80,20 @@ namespace TrackingProject.WebApi.Controllers
             }
             return BadRequest("Some properties are not valid");
         }
+        //[HttpPost("mobileLogin")]
+        //public async Task<IActionResult> MobileLoginAsync([FromBody] LoginApplicationUserDto model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var response = await _applicationUserService.MobileLoginAsync(model);
+        //        if (response.IsSuccess)
+        //        {
+        //            return Ok(new {response.Message });
+        //        }
+        //        return BadRequest(response);
+        //    }
+        //    return BadRequest("Some properties are not valid");
+        //}
         [HttpPost("mobileLogin")]
         public async Task<IActionResult> MobileLoginAsync([FromBody] LoginApplicationUserDto model)
         {
@@ -88,7 +102,7 @@ namespace TrackingProject.WebApi.Controllers
                 var response = await _applicationUserService.MobileLoginAsync(model);
                 if (response.IsSuccess)
                 {
-                    return Ok(new {response.Message });
+                    return Ok(new { response.Message });
                 }
                 return BadRequest(response);
             }
@@ -110,14 +124,15 @@ namespace TrackingProject.WebApi.Controllers
         }
         private string CreateToken(LoginApplicationUserDto user)
         {
+            //kullanıcı ad - soyad,departman adı,giriş çıkış saatleri, eklenecek
             //Kullanıcının rollerini veri tabanından alıyoruz
             ApplicationUser userRole = _userManager.Users.FirstOrDefault(x => x.Email == user.Email);
             var roleNames = _userManager.GetRolesAsync(userRole).Result;
             string joinRoleName = string.Join(',', roleNames);
             string name = userRole.FirstName+" "+userRole.LastName;
             //int departmentId = userRole.DepartmentID;
-            //var department = _context.Departments.FirstOrDefault(d => d.DepartmentID == departmentId);
-            //string departmentName = department != null ? department.Name : "";
+            // department = _context.Departments.FirstOrDefault(d => d.DepartmentID == departmentId);
+            //var departmentName = department != null ? department.Name : "";
             int userID = userRole.Id;
             // Token için gerekli anahtar oluşturuyoruz
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthSettings:Token"]));
