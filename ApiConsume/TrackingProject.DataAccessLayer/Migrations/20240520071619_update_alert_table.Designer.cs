@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrackingProject.DataAccessLayer.Concrete;
 
@@ -10,9 +11,10 @@ using TrackingProject.DataAccessLayer.Concrete;
 namespace TrackingProject.DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240520071619_update_alert_table")]
+    partial class update_alert_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,11 +126,17 @@ namespace TrackingProject.DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Message")
                         .HasColumnType("longtext");
 
-                    b.Property<long>("Time")
+                    b.Property<long>("Timestamp")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -311,7 +319,7 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<long>("Time")
+                    b.Property<long>("Timestamp")
                         .HasColumnType("bigint");
 
                     b.Property<int>("UserId")

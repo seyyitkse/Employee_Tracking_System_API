@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrackingProject.DataAccessLayer.Concrete;
 
@@ -10,9 +11,10 @@ using TrackingProject.DataAccessLayer.Concrete;
 namespace TrackingProject.DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240520070118_update_alert_table_name")]
+    partial class update_alert_table_name
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,26 +118,6 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.Alert", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("longtext");
-
-                    b.Property<long>("Time")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Alerts");
                 });
 
             modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.Announcement", b =>
@@ -311,7 +293,7 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<long>("Time")
+                    b.Property<long>("Timestamp")
                         .HasColumnType("bigint");
 
                     b.Property<int>("UserId")
@@ -334,6 +316,29 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("ScheduleTypes");
+                });
+
+            modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.UserAlert", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("Timestamp")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserAlerts");
                 });
 
             modelBuilder.Entity("TrackingProject.EntityLayer.Concrete.UserProfileImage", b =>

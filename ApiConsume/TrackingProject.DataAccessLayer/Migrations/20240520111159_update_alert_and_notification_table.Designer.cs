@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrackingProject.DataAccessLayer.Concrete;
 
@@ -10,9 +11,10 @@ using TrackingProject.DataAccessLayer.Concrete;
 namespace TrackingProject.DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240520111159_update_alert_and_notification_table")]
+    partial class update_alert_and_notification_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,10 +129,10 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("longtext");
 
-                    b.Property<long>("Time")
+                    b.Property<long?>("Time")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -311,10 +313,10 @@ namespace TrackingProject.DataAccessLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<long>("Time")
+                    b.Property<long?>("Time")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("RecognitionID");
