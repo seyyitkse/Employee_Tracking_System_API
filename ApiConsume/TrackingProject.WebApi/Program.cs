@@ -30,12 +30,12 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     options.Password.RequiredLength = 5;
 }).AddEntityFrameworkStores<Context>().AddDefaultTokenProviders();
 
-//builder.Services.AddAuthorization(
-//    options=>
-//    {
-//        options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin"));
-//        options.AddPolicy("RequireEmployeeRole", policy => policy.RequireRole("Employee"));
-//    });
+builder.Services.AddAuthorization(
+    options =>
+    {
+        options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin"));
+        options.AddPolicy("RequireEmployeeRole", policy => policy.RequireRole("Employee"));
+    });
 
 
 var jwtIssuer = builder.Configuration["AuthSettings:Issuer"];

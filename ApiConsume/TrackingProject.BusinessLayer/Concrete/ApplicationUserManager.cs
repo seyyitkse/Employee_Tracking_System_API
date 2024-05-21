@@ -141,7 +141,8 @@ namespace TrackingProject.BusinessLayer.Concrete
                 LastName = model.LastName,
                 Email = model.Mail,
                 UserName = model.Mail,
-                DepartmentID = model.DepartmentID
+                DepartmentID = model.DepartmentID,
+                Fullname = model.FirstName + " " + model.LastName
             };
 
             var result = await _userManager.CreateAsync(identityuser, model.Password);

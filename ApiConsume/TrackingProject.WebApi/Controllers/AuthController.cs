@@ -45,7 +45,7 @@ namespace TrackingProject.WebApi.Controllers
                 }
                 return BadRequest(result);
             }
-            return BadRequest("Bazı değerler girilmedi!");
+            return Ok();
         }
 
         [HttpPost("RegisterAdmin")]

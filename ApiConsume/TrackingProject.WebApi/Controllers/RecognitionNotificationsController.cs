@@ -37,7 +37,7 @@ namespace TrackingProject.WebApi.Controllers
             }
 
             // Attempt to find the user by their first name
-            var user = _context.Users.FirstOrDefault(x => x.FirstName == notification.Name);
+            var user = _context.Users.FirstOrDefault(x => x.Fullname == notification.Name);
             if (user == null)
             {
                 return NotFound("User not found");
@@ -49,8 +49,9 @@ namespace TrackingProject.WebApi.Controllers
             notification.UserId = user.Id;
 
             // Convert the Unix timestamp to DateTime
-            DateTime dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)notification.Time).DateTime;
-
+            DateTime dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)notification.Time)
+                                            .ToOffset(TimeSpan.FromHours(3))
+                                            .DateTime;
             // Define working hours
             TimeSpan start = new TimeSpan(8, 0, 0); // 8:00 AM
             TimeSpan end = new TimeSpan(17, 0, 0); // 5:00 PM
@@ -66,10 +67,12 @@ namespace TrackingProject.WebApi.Controllers
             if (now >= start && now <= end)
             {
                 alert.Message = "Kullanıcı mesai saatlerinde giriş yaptı.";
+                alert.Type = "success";
             }
             else
             {
                 alert.Message = "Kullanıcı mesai saatleri dışında giriş yaptı.";
+                alert.Type = "warning";
             }
 
             // Insert the alert using the alert service
