@@ -23,13 +23,15 @@ namespace TrackingProject.WebApi.Controllers
         private readonly IConfiguration _configuration;
         private readonly Context _context;
 
-        public AuthController(IApplicationUserService applicationUserService, UserManager<ApplicationUser> userManager, IConfiguration configuration,RoleManager<ApplicationRole> roleManager)
+        public AuthController(IApplicationUserService applicationUserService, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IConfiguration configuration, Context context)
         {
-            _roleManager= roleManager;
             _applicationUserService = applicationUserService;
             _userManager = userManager;
+            _roleManager = roleManager;
             _configuration = configuration;
+            _context = context;
         }
+
         [HttpPost("RegisterEmployee")]
         public async Task<IActionResult> RegisterEmployeeAsync([FromBody] CreateApplicationUserDto model)
         {
@@ -73,10 +75,38 @@ namespace TrackingProject.WebApi.Controllers
                 var user = await _applicationUserService.LoginUserAsync(model);
                 if (user.IsSuccess)
                 {
-                    var token = CreateToken(model);
-                    return Ok(new { Token = token });
+                    var token = await CreateTokenAsync(model);
+                    return Ok(new { token });
                 }
                 return BadRequest(user);
+            }
+            return BadRequest("Some properties are not valid");
+        }
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.NewPassword != model.NewPassword)
+                {
+                    return BadRequest("New password and confirmation password do not match.");
+                }
+
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    return BadRequest("User not found.");
+                }
+
+                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    return Ok("Password changed successfully.");
+                }
+                else
+                {
+                    return BadRequest(result.Errors);
+                }
             }
             return BadRequest("Some properties are not valid");
         }
@@ -102,7 +132,8 @@ namespace TrackingProject.WebApi.Controllers
                 var response = await _applicationUserService.MobileLoginAsync(model);
                 if (response.IsSuccess)
                 {
-                    return Ok(new { response.Message });
+                    var token = CreateTokenAsync(model);
+                    return Ok(new { token, response.Message });
                 }
                 return BadRequest(response);
             }
@@ -122,46 +153,50 @@ namespace TrackingProject.WebApi.Controllers
             }
             return BadRequest("Some properties are not valid");
         }
-        private string CreateToken(LoginApplicationUserDto user)
+        private async Task<string> CreateTokenAsync(LoginApplicationUserDto loginUser)
         {
-            //kullanıcı ad - soyad,departman adı,giriş çıkış saatleri, eklenecek
-            //Kullanıcının rollerini veri tabanından alıyoruz
-            ApplicationUser userRole = _userManager.Users.FirstOrDefault(x => x.Email == user.Email);
-            var roleNames = _userManager.GetRolesAsync(userRole).Result;
-            string joinRoleName = string.Join(',', roleNames);
-            string name = userRole.FirstName+" "+userRole.LastName;
-            //int departmentId = userRole.DepartmentID;
-            // department = _context.Departments.FirstOrDefault(d => d.DepartmentID == departmentId);
-            //var departmentName = department != null ? department.Name : "";
-            int userID = userRole.Id;
-            // Token için gerekli anahtar oluşturuyoruz
+            // Get the user from the database
+            ApplicationUser user = _userManager.Users.FirstOrDefault(x => x.Email == loginUser.Email);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            string name = $"{user.FirstName} {user.LastName}";
+            int userID = user.Id;
+
+            int departmanId = user.DepartmentID;
+            Department department = _context.Departments.FirstOrDefault(x => x.DepartmentID == departmanId);
+            // Create the security key
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthSettings:Token"]));
-            
-            // Token içereceği iddia edilen (claims) bilgileri belirliyoruz
+
+            // Define the claims
             var claims = new List<Claim>
             {
                 new Claim("Mail", user.Email),
-                new Claim("Username", userRole.UserName),
+                new Claim("Username", user.UserName),
                 new Claim("Name", name),
-                new Claim("Role", joinRoleName),
-                //new Claim("Department", departmentName),
+                new Claim("Department", department.Name),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("UserID", userID.ToString())
             };
 
-            // Token'in oluşturulma ve geçerlilik süreleri belirleniyor
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            // Create the token
             var token = new JwtSecurityToken(
                 issuer: _configuration["AuthSettings:Issuer"],
                 audience: _configuration["AuthSettings:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddDays(30), // Token'in geçerlilik süresi
-                notBefore: DateTime.Now, // Token'in ne zaman geçerli olacağı
+                expires: DateTime.Now.AddDays(30),
+                notBefore: DateTime.Now,
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
 
-            // Oluşturulan token string olarak dönüştürülüyor
-            var tokenAsString = new JwtSecurityTokenHandler().WriteToken(token);
-            return tokenAsString;
+            // Return the token as a string
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
         //public async Task<List<UserLoginHistory>> GetUserLoginHistory(string userId)
         //{
         //    return await _context.UserLoginHistory
