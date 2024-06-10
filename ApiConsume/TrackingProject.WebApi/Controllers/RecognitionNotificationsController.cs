@@ -36,22 +36,58 @@ namespace TrackingProject.WebApi.Controllers
                 return BadRequest("Notification is required.");
             }
 
-            // Attempt to find the user by their first name
+            // Check if the name is "Unknown"
+            if (notification.Name.Equals("Unknown", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("Bilinmeyen kullanıcı!!!");
+            }
+            // Attempt to find the user by their full name
             var user = _context.Users.FirstOrDefault(x => x.Fullname == notification.Name);
             if (user == null)
             {
-                return NotFound("User not found");
+                return BadRequest("User not found");
             }
 
             notification.Time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-            // Assign user information to the notification
-            notification.Message = "Kullanıcı giriş yaptı.";
             notification.UserId = user.Id;
+
+            // Check the last notification for the user
+            var lastNotification = _context.RecognitionNotifications
+                .Where(r => r.UserId == user.Id)
+                .OrderByDescending(r => r.RecognitionID)
+                .FirstOrDefault();
+
+            // Prevent duplicate entry or exit
+            if (lastNotification != null)
+            {
+                if (notification.Entry == lastNotification.Entry)
+                {
+                    if (notification.Entry)
+                    {
+                        return BadRequest("Kullanıcı zaten giriş yaptı!");
+                    }
+                    else
+                    {
+                        return BadRequest("Kullanıcı zaten çıkış yaptı!");
+                    }
+                }
+            }
+
+            // Assign message based on entry or exit
+            if (notification.Entry)
+            {
+                notification.Message = "Kullanıcı giriş yaptı.";
+            }
+            else
+            {
+                notification.Message = "Kullanıcı çıkış yaptı.";
+            }
 
             // Convert the Unix timestamp to DateTime
             DateTime dateTime = DateTimeOffset.FromUnixTimeMilliseconds((long)notification.Time)
-                                            .ToOffset(TimeSpan.FromHours(3))
-                                            .DateTime;
+                .ToOffset(TimeSpan.FromHours(3))
+                .DateTime;
+
             // Define working hours
             TimeSpan start = new TimeSpan(8, 0, 0); // 8:00 AM
             TimeSpan end = new TimeSpan(17, 0, 0); // 5:00 PM
@@ -64,10 +100,17 @@ namespace TrackingProject.WebApi.Controllers
                 UserId = notification.UserId
             };
 
-            if (now >= start && now <= end)
+            if (now >= start && now <= end && notification.Entry)
             {
                 alert.Message = "Kullanıcı mesai saatlerinde giriş yaptı.";
                 alert.Type = "success";
+                alert.Entry = true;
+            }
+            else if (now >= start && now <= end && !notification.Entry)
+            {
+                alert.Message = "Kullanıcı mesai saatlerinde çıkış yaptı.";
+                alert.Type = "success";
+                alert.Entry = false;
             }
             else
             {
@@ -81,7 +124,22 @@ namespace TrackingProject.WebApi.Controllers
             // Insert the notification using the notification service
             _recognitionNotificationService.TInsert(notification);
 
-            return Ok("Giriş başarılı!");
+            // Add to schedule user table as an event between entry-exit transaction
+            if (lastNotification != null && !notification.Entry)
+            {
+                var userSchedule = new WeeklySchedule
+                {
+                    UserId = notification.UserId,
+                    Starttime = lastNotification.Time,
+                    Endtime = notification.Time,
+                    Description = "Çalışma Saatleri- Giriş-Çıkış"
+                };
+
+                _context.WeeklySchedules.Add(userSchedule);
+                _context.SaveChanges();
+            }
+
+            return Ok(notification.Entry ? "Giriş başarılı!" : "Çıkış başarılı");
         }
 
         [HttpDelete]
