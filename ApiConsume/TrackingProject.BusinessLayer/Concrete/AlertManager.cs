@@ -19,7 +19,7 @@ namespace TrackingProject.BusinessLayer.Concrete
 
         public List<Alert> GetAlertsByUserId(int userId)
         {
-            return _dbContext.Alerts.Where(a => a.UserId == userId).ToList();
+            return _dbContext.Alerts.Where(x=>x.UserId==userId).OrderByDescending(y=>y.Time).ToList();
         }
 
         public void TDelete(Alert entity)
