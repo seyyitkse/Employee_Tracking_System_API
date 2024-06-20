@@ -38,12 +38,22 @@ namespace TrackingProject.WebApi.Controllers
             _departmentService.TDelete(values);
             return Ok();
         }
-        [HttpPut]
-        public IActionResult UpdateDepartment(Department Department)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> CloseDepartment(int id)
         {
-            _departmentService.TUpdate(Department);
-            return Ok();
+            // Find the department with the given ID
+            var department = _departmentService.TGetById(id);
+            if (department == null)
+            {
+                return NotFound("Departman kapatma hatası!");
+            }
+
+            // Update the department status
+            department.Status = false;
+            _departmentService.TUpdate(department);
+            return Ok("Departman kapatma işlemi başarıyla gerçekleşti.");
         }
+
         [HttpGet("{id}")]
         public IActionResult GetDepartment(int id)
         {

@@ -74,7 +74,7 @@ namespace TrackingProject.WebApi.Controllers
             }
 
             // Assign message based on entry or exit
-            if (notification.Entry)
+            if (notification.Entry==true)
             {
                 notification.Message = "Kullanıcı giriş yaptı.";
             }

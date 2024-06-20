@@ -41,5 +41,11 @@ namespace TrackingProject.WebApi.Controllers
             var values = _alertService.GetAlertsByUserId(id);
             return Ok(values);
         }
+        [HttpGet("getAlerts/{userId}")]
+        public IActionResult GetAlertsByUserId(int userId)
+        {
+            var values = _alertService.GetAlertsByUserId(userId);
+            return Ok(values);
+        }
     }
 }

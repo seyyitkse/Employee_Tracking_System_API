@@ -132,7 +132,7 @@ namespace TrackingProject.WebApi.Controllers
                 var response = await _applicationUserService.MobileLoginAsync(model);
                 if (response.IsSuccess)
                 {
-                    var token = CreateTokenAsync(model);
+                    var token = await CreateTokenAsync(model);
                     return Ok(new { token, response.Message });
                 }
                 return BadRequest(response);
@@ -155,7 +155,6 @@ namespace TrackingProject.WebApi.Controllers
         }
         private async Task<string> CreateTokenAsync(LoginApplicationUserDto loginUser)
         {
-            // Get the user from the database
             ApplicationUser user = _userManager.Users.FirstOrDefault(x => x.Email == loginUser.Email);
             var roles = await _userManager.GetRolesAsync(user);
 
@@ -164,10 +163,8 @@ namespace TrackingProject.WebApi.Controllers
 
             int departmanId = user.DepartmentID;
             Department department = _context.Departments.FirstOrDefault(x => x.DepartmentID == departmanId);
-            // Create the security key
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthSettings:Token"]));
 
-            // Define the claims
             var claims = new List<Claim>
             {
                 new Claim("Mail", user.Email),
@@ -183,7 +180,6 @@ namespace TrackingProject.WebApi.Controllers
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            // Create the token
             var token = new JwtSecurityToken(
                 issuer: _configuration["AuthSettings:Issuer"],
                 audience: _configuration["AuthSettings:Audience"],
@@ -193,7 +189,6 @@ namespace TrackingProject.WebApi.Controllers
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
 
-            // Return the token as a string
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 

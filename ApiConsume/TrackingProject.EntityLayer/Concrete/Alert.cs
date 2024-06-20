@@ -10,5 +10,6 @@ namespace TrackingProject.EntityLayer.Concrete
         public long Time{ get; set; }
         public string? Type { get; set; }
         public int UserId { get; set; }
+        public bool Entry { get; set; }
     }
 }
